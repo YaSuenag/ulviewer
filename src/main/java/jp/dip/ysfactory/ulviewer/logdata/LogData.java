@@ -20,7 +20,9 @@ package jp.dip.ysfactory.ulviewer.logdata;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeFormatterBuilder;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.regex.Matcher;
@@ -31,6 +33,10 @@ import java.util.stream.Collectors;
 public class LogData {
 
     private static final Pattern DECORATION_PATTERN = Pattern.compile("\\[(.+?)\\]");
+
+    private static final DateTimeFormatter LOG_DATETIME_FORMATTER = new DateTimeFormatterBuilder().append(DateTimeFormatter.ISO_LOCAL_DATE_TIME)
+                                                                                                         .appendOffset("+HHMM", "0000")
+                                                                                                         .toFormatter();
 
     private LocalDateTime time;
 
@@ -66,12 +72,16 @@ public class LogData {
         uptimeMillis = -1;
         timeNanos = -1;
         uptimeNanos = -1;
-        hostname = null;
+        hostname = "<Unknown>";
         pid = -1;
         tid = -1;
-        level = null;
-        tags = null;
+        level = "<Unknown>";
+        tags = Collections.singleton("<Unknown>");
         message = logline;
+
+        if(!logline.startsWith("[")){
+            return;
+        }
 
         Matcher matcher = DECORATION_PATTERN.matcher(logline);
         for (LogDecoration decoration : decorations){
@@ -80,11 +90,11 @@ public class LogData {
 
             switch(decoration){
                 case TIME:
-                    time = LocalDateTime.parse(decorationStr, DateTimeFormatter.ISO_OFFSET_DATE_TIME);
+                    time = LocalDateTime.parse(decorationStr, LOG_DATETIME_FORMATTER);
                     break;
 
                 case UTCTIME:
-                    utcTime = LocalDateTime.parse(decorationStr, DateTimeFormatter.ISO_OFFSET_DATE_TIME);
+                    utcTime = LocalDateTime.parse(decorationStr, LOG_DATETIME_FORMATTER);
                     break;
 
                 case UPTIME:

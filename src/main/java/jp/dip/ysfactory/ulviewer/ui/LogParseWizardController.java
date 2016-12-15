@@ -129,7 +129,7 @@ public class LogParseWizardController implements Initializable {
             if(decoration.endsWith("+0000")){
                 mappingTable.getItems().add(new WizardTableValue(decoration, LogDecoration.UTCTIME));
             }
-            else if(decoration.matches("\\+\\d{4}$")){
+            else if(decoration.matches(".+\\+\\d{4}$")){
                 mappingTable.getItems().add(new WizardTableValue(decoration, LogDecoration.TIME));
             }
             else if(decoration.matches("^\\d+\\.\\d+s$")){
