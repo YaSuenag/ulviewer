@@ -31,6 +31,14 @@ Your logs are shown in main window.
 
 You can set filters through log decoration. You can choose decoration from [ComboBox](https://docs.oracle.com/javase/8/javafx/api/javafx/scene/control/ComboBox.html), and check on [CheckBox](https://docs.oracle.com/javase/8/javafx/api/javafx/scene/control/CheckBox.html).
 
+#### Drawing chart
+
+##### Java heap usage chart
+
+* [Chart] -> [Memory] -> [Java heap usage]
+* You can check Java heap memory. This chart shows all STW collection (all major/minor GCs)
+* You can also check specific GC events when you click the plot on the chart.
+
 ## How to build
 
 You have to use JDK 8 and JavaFX 8.
