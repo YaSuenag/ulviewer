@@ -104,12 +104,12 @@ public class JavaHeapUsageChartViewer extends ChartViewer {
             }
 
             Matcher gcMatcher = GC_EVENT_PATTERN.matcher(log.getMessage());
-            if(gcMatcher.matches()){
-                gcEventList.computeIfAbsent(Integer.parseInt(gcMatcher.group(2)), k -> new ArrayList<>()).add(log);
-            }
-            else{
+            if(!gcMatcher.matches()){
                 continue;
             }
+
+            int gcid = Integer.parseInt(gcMatcher.group(2));
+            gcEventList.computeIfAbsent(gcid, k -> new ArrayList<>()).add(log);
 
             if((log.getTags().size() != 1) || !log.getLevel().equals("info")){
                 continue;
@@ -173,6 +173,9 @@ public class JavaHeapUsageChartViewer extends ChartViewer {
             Node usageDataNode = usageData.getNode();
             capacityDataNode.addEventHandler(MouseEvent.MOUSE_ENTERED_TARGET, e -> setTooltipValue(xValStr, capacity, usage, phase));
             usageDataNode.addEventHandler(MouseEvent.MOUSE_ENTERED_TARGET, e -> setTooltipValue(xValStr, capacity, usage, phase));
+            capacityDataNode.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> super.showLogWindow(gcEventList.get(gcid), "GC ID: " + gcid));
+            usageDataNode.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> super.showLogWindow(gcEventList.get(gcid), "GC ID: " + gcid));
+
             Node capacityNodeStyle = capacityDataNode.lookup(".chart-area-symbol");
             Node usageNodeStyle = usageDataNode.lookup(".chart-area-symbol");
             capacityNodeStyle.setStyle("-fx-opacity: 0.0; -fx-background-radius: 10px; -fx-padding: 12px;");

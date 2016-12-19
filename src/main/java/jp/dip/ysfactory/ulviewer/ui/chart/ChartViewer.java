@@ -19,9 +19,12 @@
 package jp.dip.ysfactory.ulviewer.ui.chart;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javafx.scene.Scene;
 import javafx.scene.chart.Chart;
+import javafx.scene.control.TextArea;
+import javafx.scene.text.Font;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
@@ -31,6 +34,8 @@ import jp.dip.ysfactory.ulviewer.ui.ChartWizardController;
 import jp.dip.ysfactory.ulviewer.ui.MainController;
 
 public abstract class ChartViewer {
+
+    private static final Font MONOSPACE_FONT = new Font("Monospaced Regular", 12.0d);
     
     protected final List<LogData> logdata;
     
@@ -60,6 +65,20 @@ public abstract class ChartViewer {
         window.setTitle(title);
 
         return window;
+    }
+
+    protected void showLogWindow(List<LogData> target, String title){
+        TextArea logArea = new TextArea(target.stream()
+                                               .map(LogData::getMessage)
+                                               .collect(Collectors.joining("\n")));
+        logArea.setFont(MONOSPACE_FONT);
+        logArea.setEditable(false);
+
+        Stage window = new Stage(StageStyle.UTILITY);
+        window.setScene(new Scene(logArea, 500, 300));
+        window.initModality(Modality.NONE);
+        window.setTitle(title);
+        window.show();
     }
     
     public abstract void draw();
