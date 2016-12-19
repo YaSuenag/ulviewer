@@ -41,6 +41,8 @@ import javafx.stage.StageStyle;
 import jp.dip.ysfactory.ulviewer.logdata.LogData;
 import jp.dip.ysfactory.ulviewer.logdata.LogDecoration;
 import jp.dip.ysfactory.ulviewer.logdata.LogParser;
+import jp.dip.ysfactory.ulviewer.ui.chart.JavaHeapUsageChartViewer;
+import jp.dip.ysfactory.ulviewer.ui.chart.ChartViewer;
 
 import java.io.File;
 import java.io.IOException;
@@ -53,20 +55,20 @@ import java.util.stream.Collectors;
 
 public class MainController implements Initializable{
 
-    private static class DecoratorSwitch{
+    public static class DecoratorSwitch{
         private final BooleanProperty enable;
         private final ObjectProperty<Object> category;
 
-        DecoratorSwitch(Object cat){
+        public DecoratorSwitch(Object cat){
             enable = new SimpleBooleanProperty(true);
             category = new ReadOnlyObjectWrapper<>(cat);
         }
 
-        BooleanProperty enableProperty() {
+        public BooleanProperty enableProperty() {
             return enable;
         }
 
-        ObjectProperty<Object> categoryProperty() {
+        public ObjectProperty<Object> categoryProperty() {
             return category;
         }
 
@@ -76,18 +78,18 @@ public class MainController implements Initializable{
         }
     }
 
-    private static class DecoratorValue{
+    public static class DecoratorValue{
         private final ObjectProperty<LogDecoration> decoration;
         private final ObservableList<DecoratorSwitch> value;
 
-        DecoratorValue(LogDecoration deco, List<Object> vals){
+        public DecoratorValue(LogDecoration deco, List<Object> vals){
             decoration = new ReadOnlyObjectWrapper<>(deco);
             value = FXCollections.observableList(vals.stream()
                                                       .map(DecoratorSwitch::new)
                                                       .collect(Collectors.toList()));
         }
 
-        ObjectProperty<LogDecoration> decorationProperty() {
+        public ObjectProperty<LogDecoration> decorationProperty() {
             return decoration;
         }
 
@@ -95,7 +97,7 @@ public class MainController implements Initializable{
             return value;
         }
 
-        boolean doFilter(LogData logData){
+        public boolean doFilter(LogData logData){
             switch (decoration.get()){
                 case HOSTNAME:
                     return value.stream()
@@ -149,6 +151,10 @@ public class MainController implements Initializable{
 
     private Scene logParseWizardScene;
 
+    private ChartWizardController chartWizardController;
+
+    private List<LogDecoration> decorations;
+
     private List<LogData> logs;
 
     public void setStage(Stage stage){
@@ -156,12 +162,15 @@ public class MainController implements Initializable{
     }
 
     public void initialize(URL location, ResourceBundle resources) {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("logparse-wizard.fxml"));
+        FXMLLoader logParseWizardLoader = new FXMLLoader(getClass().getResource("logparse-wizard.fxml"));
+        FXMLLoader chartWizardLoader = new FXMLLoader(getClass().getResource("chart-wizard.fxml"));
 
         try{
-            loader.load();
-            logParseWizardController = loader.getController();
-            logParseWizardScene = new Scene(loader.getRoot());
+            logParseWizardLoader.load();
+            logParseWizardController = logParseWizardLoader.getController();
+            logParseWizardScene = new Scene(logParseWizardLoader.getRoot());
+            chartWizardLoader.load();
+            chartWizardController = chartWizardLoader.getController();
         }
         catch(IOException e){
             throw new UncheckedIOException(e);
@@ -233,7 +242,7 @@ public class MainController implements Initializable{
             wizard.setTitle("Log parser wizard");
             wizard.showAndWait();
 
-            List<LogDecoration> decorations = logParseWizardController.getDecorations();
+            decorations = logParseWizardController.getDecorations();
             if(decorations == null){
                 return;
             }
@@ -262,6 +271,17 @@ public class MainController implements Initializable{
                      .forEach(s -> s.enableProperty().set(false));
         setDecoratorListener();
         showLog();
+    }
+
+    @FXML
+    private void onJavaHeapUsageChartClicked(ActionEvent event){
+        ChartViewer viewer = new JavaHeapUsageChartViewer(logs, chartWizardController);
+
+        if(!viewer.showChartWizard(decorations, decoratorBox.getItems())){
+            return;
+        }
+
+        viewer.draw();
     }
 
 }

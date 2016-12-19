@@ -35,7 +35,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1" fx:controller="jp.dip.ysfactory.ulviewer.ui.MainController">
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" xmlns:fx="http://javafx.com/fxml/1" fx:controller="jp.dip.ysfactory.ulviewer.ui.MainController">
    <children>
       <MenuBar>
         <menus>
@@ -46,6 +46,15 @@
               <MenuItem mnemonicParsing="false" text="Close" />
             </items>
           </Menu>
+            <Menu mnemonicParsing="false" text="Chart">
+              <items>
+                  <Menu mnemonicParsing="false" text="Memory">
+                    <items>
+                      <MenuItem mnemonicParsing="false" onAction="#onJavaHeapUsageChartClicked" text="Java heap usage" />
+                    </items>
+                  </Menu>
+              </items>
+            </Menu>
         </menus>
       </MenuBar>
       <SplitPane dividerPositions="0.3" prefHeight="10000.0" prefWidth="10000.0">

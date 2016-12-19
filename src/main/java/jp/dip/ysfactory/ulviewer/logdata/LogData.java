@@ -19,6 +19,7 @@
 package jp.dip.ysfactory.ulviewer.logdata;
 
 import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeFormatterBuilder;
 import java.util.Arrays;
@@ -38,7 +39,7 @@ public class LogData {
                                                                                                          .appendOffset("+HHMM", "0000")
                                                                                                          .toFormatter();
 
-    private LocalDateTime time;
+    private ZonedDateTime time;
 
     private LocalDateTime utcTime;
 
@@ -90,7 +91,7 @@ public class LogData {
 
             switch(decoration){
                 case TIME:
-                    time = LocalDateTime.parse(decorationStr, LOG_DATETIME_FORMATTER);
+                    time = ZonedDateTime.parse(decorationStr, LOG_DATETIME_FORMATTER);
                     break;
 
                 case UTCTIME:
@@ -130,7 +131,7 @@ public class LogData {
                     break;
 
                 case LEVEL:
-                    level = decorationStr;
+                    level = decorationStr.trim();
                     break;
 
                 case TAGS:
@@ -142,7 +143,7 @@ public class LogData {
         }
     }
 
-    public LocalDateTime getTime() {
+    public ZonedDateTime getTime() {
         return time;
     }
 
