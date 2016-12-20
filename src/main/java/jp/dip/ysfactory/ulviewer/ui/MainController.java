@@ -44,6 +44,7 @@ import jp.dip.ysfactory.ulviewer.logdata.LogDecoration;
 import jp.dip.ysfactory.ulviewer.logdata.LogParser;
 import jp.dip.ysfactory.ulviewer.ui.chart.ChartViewer;
 import jp.dip.ysfactory.ulviewer.ui.chart.JavaHeapUsageChartViewer;
+import jp.dip.ysfactory.ulviewer.ui.chart.PauseTimeChartViewer;
 
 import java.io.File;
 import java.io.IOException;
@@ -148,6 +149,9 @@ public class MainController implements Initializable{
 
     @FXML
     private MenuItem javaHeapUsageChart;
+
+    @FXML
+    private MenuItem pauseTimeChart;
 
     private Stage stage;
 
@@ -278,10 +282,20 @@ public class MainController implements Initializable{
     }
 
     @FXML
-    private void onChartMenuClicked(ActionEvent event){
-        ChartViewer viewer = new JavaHeapUsageChartViewer(logs, chartWizardController);
+    private void onChartMenuClicked(ActionEvent event) {
+        ChartViewer viewer;
 
-        if(viewer.showChartWizard(decorations, decoratorBox.getItems())){
+        if(event.getSource().equals(javaHeapUsageChart)){
+            viewer = new JavaHeapUsageChartViewer(logs, chartWizardController);
+        }
+        else if(event.getSource().equals(pauseTimeChart)){
+            viewer = new PauseTimeChartViewer(logs, chartWizardController);
+        }
+        else{
+            throw new RuntimeException("Unknown menu");
+        }
+
+        if(viewer.showChartWizard(decorations, decoratorBox.getItems())) {
             viewer.draw();
         }
 
