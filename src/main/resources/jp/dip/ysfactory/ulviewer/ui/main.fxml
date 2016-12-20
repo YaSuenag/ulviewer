@@ -50,7 +50,7 @@
               <items>
                   <Menu mnemonicParsing="false" text="Memory">
                     <items>
-                      <MenuItem mnemonicParsing="false" onAction="#onJavaHeapUsageChartClicked" text="Java heap usage" />
+                      <MenuItem fx:id="javaHeapUsageChart" mnemonicParsing="false" onAction="#onChartMenuClicked" text="Java heap usage" />
                     </items>
                   </Menu>
               </items>

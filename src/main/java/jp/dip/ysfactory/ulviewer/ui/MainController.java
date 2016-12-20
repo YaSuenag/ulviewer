@@ -32,6 +32,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ListView;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.cell.CheckBoxListCell;
 import javafx.stage.FileChooser;
@@ -41,8 +42,8 @@ import javafx.stage.StageStyle;
 import jp.dip.ysfactory.ulviewer.logdata.LogData;
 import jp.dip.ysfactory.ulviewer.logdata.LogDecoration;
 import jp.dip.ysfactory.ulviewer.logdata.LogParser;
-import jp.dip.ysfactory.ulviewer.ui.chart.JavaHeapUsageChartViewer;
 import jp.dip.ysfactory.ulviewer.ui.chart.ChartViewer;
+import jp.dip.ysfactory.ulviewer.ui.chart.JavaHeapUsageChartViewer;
 
 import java.io.File;
 import java.io.IOException;
@@ -143,7 +144,10 @@ public class MainController implements Initializable{
     private ListView<DecoratorSwitch> visibleList;
 
     @FXML
-    TextArea logArea;
+    private TextArea logArea;
+
+    @FXML
+    private MenuItem javaHeapUsageChart;
 
     private Stage stage;
 
@@ -274,14 +278,13 @@ public class MainController implements Initializable{
     }
 
     @FXML
-    private void onJavaHeapUsageChartClicked(ActionEvent event){
+    private void onChartMenuClicked(ActionEvent event){
         ChartViewer viewer = new JavaHeapUsageChartViewer(logs, chartWizardController);
 
-        if(!viewer.showChartWizard(decorations, decoratorBox.getItems())){
-            return;
+        if(viewer.showChartWizard(decorations, decoratorBox.getItems())){
+            viewer.draw();
         }
 
-        viewer.draw();
     }
 
 }

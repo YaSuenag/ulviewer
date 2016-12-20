@@ -33,16 +33,16 @@ import javafx.stage.Stage;
 import jp.dip.ysfactory.ulviewer.logdata.LogData;
 import jp.dip.ysfactory.ulviewer.ui.ChartWizardController;
 
-import java.time.ZoneOffset;
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class JavaHeapUsageChartViewer extends ChartViewer {
+public class JavaHeapUsageChartViewer extends MemoryChartBase {
     
-    private static final Pattern GC_EVENT_PATTERN = Pattern.compile("^(\\[.+?\\])+ GC\\((\\d+)\\) (.+)$");
-
     private static final Pattern JAVA_HEAP_USAGE_PATTERN = Pattern.compile("^Pause (.+?) \\d+M->(\\d+)M\\((\\d+)M\\) [0-9.]+ms$");
+
+    private static final String BASE_SYMBOL_STYLE = "-fx-background-radius: 7px; -fx-padding: 8px;";
 
     private final LogTooltip tooltip;
 
@@ -56,11 +56,11 @@ public class JavaHeapUsageChartViewer extends ChartViewer {
         capacityLabel = new Label();
         usageLabel = new Label();
         tooltip = new LogTooltip(Arrays.asList(new LogTooltip.GridEntry(Color.RED, new Label("Capacity"), capacityLabel),
-                                                 new LogTooltip.GridEntry(Color.BLUE, new Label("Usage"), usageLabel)));
+                                               new LogTooltip.GridEntry(Color.BLUE, new Label("Usage"), usageLabel)));
     }
 
-    private void setTooltipValue(String xValStr, long capacity, long usage, String text){
-        tooltip.setText(xValStr + "\n" + text);
+    private void setTooltipValue(String xValStr, long capacity, long usage, String text, long gcid){
+        tooltip.setText(xValStr + "\n" + text + "\n" + "GC ID: " + gcid);
         capacityLabel.setText(capacity + " MB");
         usageLabel.setText(usage + " MB");
     }
@@ -82,40 +82,22 @@ public class JavaHeapUsageChartViewer extends ChartViewer {
         AreaChart<Number, Long> chart = new AreaChart(xAxis, yAxis, FXCollections.observableArrayList(capacitySeries, usageSeries));
         chart.setAnimated(false);
         chart.setLegendVisible(false);
-        chart.lookup(".series0").setStyle("-fx-fill: red; -fx-stroke: red; -fx-background-color: white, red;"); // capacity
-        chart.lookup(".series1").setStyle("-fx-fill: blue; -fx-stroke: blue; -fx-background-color: white, blue;"); // usage
+        chart.lookup(".series0").setStyle("-fx-fill: red; -fx-stroke: red;"); // capacity
+        chart.lookup(".series1").setStyle("-fx-fill: blue; -fx-stroke: blue;"); // usage
 
         Stage stage = super.createStage(chart, "Java heap usage");
-        Map<Integer, List<LogData>> gcEventList = new HashMap<>();
 
         for(LogData log : super.logdata){
-            Number xValue;
-            String xValStr;
             String phase;
             long capacity;
             long usage;
 
-            if(!log.getTags().contains("gc") ||
-               (super.chartWizardController.getPid() != log.getPid()) ||
-               !Optional.ofNullable(super.chartWizardController.getHost())
-                        .map(h -> h.equals(log.getHostname()))
-                        .orElse(true)){
+            if(!super.shouldProcess(log) || (log.getTags().size() != 1)){
                 continue;
             }
 
-            Matcher gcMatcher = GC_EVENT_PATTERN.matcher(log.getMessage());
-            if(!gcMatcher.matches()){
-                continue;
-            }
-
-            int gcid = Integer.parseInt(gcMatcher.group(2));
-            gcEventList.computeIfAbsent(gcid, k -> new ArrayList<>()).add(log);
-
-            if((log.getTags().size() != 1) || !log.getLevel().equals("info")){
-                continue;
-            }
-
-            Matcher matcher = JAVA_HEAP_USAGE_PATTERN.matcher(gcMatcher.group(3));
+            long gcid = super.getGcId();
+            Matcher matcher = JAVA_HEAP_USAGE_PATTERN.matcher(super.getLogBody());
             if(!matcher.matches()){
                 continue;
             }
@@ -123,77 +105,41 @@ public class JavaHeapUsageChartViewer extends ChartViewer {
             phase = matcher.group(1);
             usage = Long.parseLong(matcher.group(2));
             capacity = Long.parseLong(matcher.group(3));
+            MemoryChartBase.XValue xValue = super.getXValue(log, super.chartWizardController.getTimeRange());
 
-            switch (super.chartWizardController.getTimeRange()){
-                case TIME:
-                    xValue = log.getTime().toInstant().toEpochMilli();
-                    xValStr = log.getTime().toString();
-                    break;
-
-                case UTCTIME:
-                    xValue = log.getUtcTime().toInstant(ZoneOffset.UTC).toEpochMilli();
-                    xValStr = log.getUtcTime().toString();
-                    break;
-
-                case UPTIME:
-                    xValue = log.getUptime();
-                    xValStr = log.getUptime() + "s";
-                    break;
-
-                case TIMEMILLIS:
-                    xValue = log.getTimeMillis();
-                    xValStr = log.getTimeMillis() + "ms";
-                    break;
-
-                case UPTIMEMILLIS:
-                    xValue = log.getUptimeMillis();
-                    xValStr = log.getUptimeMillis() + "ms";
-                    break;
-
-                case TIMENANOS:
-                    xValue = log.getTimeNanos();
-                    xValStr = log.getTimeNanos() + "ns";
-                    break;
-
-                case UPTIMENANOS:
-                    xValue = log.getUptimeNanos();
-                    xValStr = log.getUptimeNanos() + "ns";
-                    break;
-
-                default:
-                    throw new RuntimeException("Unexpected time range");
-            }
-
-            XYChart.Data<Number, Long> capacityData = new XYChart.Data<>(xValue, capacity);
-            XYChart.Data<Number, Long> usageData = new XYChart.Data<>(xValue, usage);
+            XYChart.Data<Number, Long> capacityData = new XYChart.Data<>(xValue.getValue(), capacity);
+            XYChart.Data<Number, Long> usageData = new XYChart.Data<>(xValue.getValue(), usage);
             capacitySeries.getData().add(capacityData);
             usageSeries.getData().add(usageData);
 
             Node capacityDataNode = capacityData.getNode();
             Node usageDataNode = usageData.getNode();
-            capacityDataNode.addEventHandler(MouseEvent.MOUSE_ENTERED_TARGET, e -> setTooltipValue(xValStr, capacity, usage, phase));
-            usageDataNode.addEventHandler(MouseEvent.MOUSE_ENTERED_TARGET, e -> setTooltipValue(xValStr, capacity, usage, phase));
-            capacityDataNode.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> super.showLogWindow(gcEventList.get(gcid), "GC ID: " + gcid));
-            usageDataNode.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> super.showLogWindow(gcEventList.get(gcid), "GC ID: " + gcid));
+            capacityDataNode.addEventHandler(MouseEvent.MOUSE_ENTERED_TARGET, e -> setTooltipValue(xValue.toString(), capacity, usage, phase, gcid));
+            usageDataNode.addEventHandler(MouseEvent.MOUSE_ENTERED_TARGET, e -> setTooltipValue(xValue.toString(), capacity, usage, phase, gcid));
+            capacityDataNode.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> super.showLogWindow(super.gcEventList.get(gcid), "GC ID: " + gcid));
+            usageDataNode.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> super.showLogWindow(super.gcEventList.get(gcid), "GC ID: " + gcid));
 
             Node capacityNodeStyle = capacityDataNode.lookup(".chart-area-symbol");
             Node usageNodeStyle = usageDataNode.lookup(".chart-area-symbol");
-            capacityNodeStyle.setStyle("-fx-opacity: 0.0; -fx-background-radius: 10px; -fx-padding: 12px;");
-            usageNodeStyle.setStyle("-fx-opacity: 0.0; -fx-background-radius: 10px; -fx-padding: 12px;");
 
             if(phase.startsWith("Full")){
-                capacityNodeStyle.setStyle("-fx-background-color: black;");
-                usageNodeStyle.setStyle("-fx-background-color: black;");
+                capacityNodeStyle.setStyle(BASE_SYMBOL_STYLE + "-fx-background-color: white, black;");
+                usageNodeStyle.setStyle(BASE_SYMBOL_STYLE + "-fx-background-color: white, black;");
             }
             else if(phase.startsWith("Young")) {
-                capacityDataNode.addEventHandler(MouseEvent.MOUSE_ENTERED_TARGET, e -> capacityDataNode.setVisible(true));
-                capacityDataNode.addEventHandler(MouseEvent.MOUSE_EXITED_TARGET, e -> capacityDataNode.setVisible(false));
-                usageDataNode.addEventHandler(MouseEvent.MOUSE_ENTERED_TARGET, e -> usageDataNode.setVisible(true));
-                usageDataNode.addEventHandler(MouseEvent.MOUSE_EXITED_TARGET, e -> usageDataNode.setVisible(false));
+                capacityNodeStyle.setStyle(BASE_SYMBOL_STYLE + "-fx-background-color: white, red;");
+                usageNodeStyle.setStyle(BASE_SYMBOL_STYLE + "-fx-background-color: white, blue;");
+
+                capacityDataNode.setOpacity(0.0d);
+                capacityDataNode.addEventHandler(MouseEvent.MOUSE_ENTERED_TARGET, e -> capacityDataNode.setOpacity(1.0d));
+                capacityDataNode.addEventHandler(MouseEvent.MOUSE_EXITED_TARGET, e -> capacityDataNode.setOpacity(0.0d));
+                usageDataNode.setOpacity(0.0d);
+                usageDataNode.addEventHandler(MouseEvent.MOUSE_ENTERED_TARGET, e -> usageDataNode.setOpacity(1.0d));
+                usageDataNode.addEventHandler(MouseEvent.MOUSE_EXITED_TARGET, e -> usageDataNode.setOpacity(0.0d));
             }
             else{
-                capacityNodeStyle.setStyle("-fx-background-color: orange;");
-                usageNodeStyle.setStyle("-fx-background-color: orange;");
+                capacityNodeStyle.setStyle(BASE_SYMBOL_STYLE + "-fx-background-color: white, orange;");
+                usageNodeStyle.setStyle(BASE_SYMBOL_STYLE + "-fx-background-color: white, orange;");
             }
 
             Tooltip.install(capacityData.getNode(), tooltip);
