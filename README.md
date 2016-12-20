@@ -39,6 +39,12 @@ You can set filters through log decoration. You can choose decoration from [Comb
 * You can check Java heap memory. This chart shows all STW collection (all major/minor GCs)
 * You can also check specific GC events when you click the plot on the chart.
 
+##### GC pause time chart
+
+* [Chart] -> [Memory] -> [Pause time]
+* You can check GC STW time.
+* You can also check specific GC events when you click the plot on the chart.
+
 ## How to build
 
 You have to use JDK 8 and JavaFX 8.
