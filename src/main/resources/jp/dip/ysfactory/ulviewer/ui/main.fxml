@@ -50,8 +50,9 @@
               <items>
                   <Menu mnemonicParsing="false" text="Memory">
                     <items>
-                        <MenuItem fx:id="javaHeapUsageChart" mnemonicParsing="false" onAction="#onChartMenuClicked" text="Java heap usage" />
+                        <MenuItem fx:id="javaHeapChart" mnemonicParsing="false" onAction="#onChartMenuClicked" text="Java heap" />
                         <MenuItem fx:id="pauseTimeChart" mnemonicParsing="false" onAction="#onChartMenuClicked" text="Pause time" />
+                        <MenuItem fx:id="metaspaceChart" mnemonicParsing="false" onAction="#onChartMenuClicked" text="Metaspace" />
                     </items>
                   </Menu>
               </items>

@@ -33,9 +33,9 @@ You can set filters through log decoration. You can choose decoration from [Comb
 
 #### Drawing chart
 
-##### Java heap usage chart
+##### Java heap chart
 
-* [Chart] -> [Memory] -> [Java heap usage]
+* [Chart] -> [Memory] -> [Java heap]
 * You can check Java heap memory. This chart shows all STW collection (all major/minor GCs)
 * You can also check specific GC events when you click the plot on the chart.
 
@@ -44,6 +44,11 @@ You can set filters through log decoration. You can choose decoration from [Comb
 * [Chart] -> [Memory] -> [Pause time]
 * You can check GC STW time.
 * You can also check specific GC events when you click the plot on the chart.
+
+##### Metaspace chart
+
+* [Chart] -> [Memory] -> [Metaspace]
+* You can check Metaspace usage and capacity. This chart shows Metaspace GC event.
 
 ## How to build
 

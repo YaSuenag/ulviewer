@@ -38,19 +38,19 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class JavaHeapUsageChartViewer extends MemoryChartBase {
-    
-    private static final Pattern JAVA_HEAP_USAGE_PATTERN = Pattern.compile("^Pause (.+?) \\d+M->(\\d+)M\\((\\d+)M\\) [0-9.]+ms$");
+public class MetaspaceChartViewer extends MemoryChartBase {
 
-    private static final String BASE_SYMBOL_STYLE = "-fx-background-radius: 7px; -fx-padding: 8px;";
+    private static final Pattern METASPACE_USAGE_PATTERN = Pattern.compile("^Metaspace: \\d+K->(\\d+)K\\((\\d+)K\\)$");
+
+    private static final String BASE_SYMBOL_STYLE = "-fx-opacity: 0; -fx-background-radius: 7px; -fx-padding: 8px;";
 
     private final LogTooltip tooltip;
 
     private final Label capacityLabel;
 
     private final Label usageLabel;
-    
-    public JavaHeapUsageChartViewer(List<LogData> logdata, ChartWizardController chartWizardController){
+
+    public MetaspaceChartViewer(List<LogData> logdata, ChartWizardController chartWizardController){
         super(logdata, chartWizardController);
 
         capacityLabel = new Label();
@@ -59,8 +59,8 @@ public class JavaHeapUsageChartViewer extends MemoryChartBase {
                                                new LogTooltip.GridEntry(Color.BLUE, new Label("Usage"), usageLabel)));
     }
 
-    private void setTooltipValue(String xValStr, long capacity, long usage, String text, long gcid){
-        tooltip.setText(xValStr + "\n" + text + "\n" + "GC ID: " + gcid);
+    private void setTooltipValue(String xValStr, long capacity, long usage, long gcid){
+        tooltip.setText(xValStr + "\n" + "GC ID: " + gcid);
         capacityLabel.setText(capacity + " MB");
         usageLabel.setText(usage + " MB");
     }
@@ -85,27 +85,25 @@ public class JavaHeapUsageChartViewer extends MemoryChartBase {
         chart.lookup(".series0").setStyle("-fx-fill: red; -fx-stroke: red;"); // capacity
         chart.lookup(".series1").setStyle("-fx-fill: blue; -fx-stroke: blue;"); // usage
 
-        Stage stage = super.createStage(chart, "Java heap usage");
+        Stage stage = super.createStage(chart, "Metaspace usage");
 
         for(LogData log : super.logdata){
-            String phase;
             long capacity;
             long usage;
 
-            if(!super.shouldProcess(log) || (log.getTags().size() != 1)){
+            if(!super.shouldProcess(log) || (log.getTags().size() != 2) || !log.getTags().contains("metaspace")){
                 continue;
             }
 
             long gcid = super.getGcId();
-            Matcher matcher = JAVA_HEAP_USAGE_PATTERN.matcher(super.getLogBody());
+            Matcher matcher = METASPACE_USAGE_PATTERN.matcher(super.getLogBody());
             if(!matcher.matches()){
                 continue;
             }
 
-            phase = matcher.group(1);
-            usage = Long.parseLong(matcher.group(2));
-            capacity = Long.parseLong(matcher.group(3));
-            MemoryChartBase.XValue xValue = super.getXValue(log, super.chartWizardController.getTimeRange());
+            usage = Long.parseLong(matcher.group(1)) / 1024; // in MB
+            capacity = Long.parseLong(matcher.group(2)) / 1024; // in MB
+            XValue xValue = super.getXValue(log, super.chartWizardController.getTimeRange());
 
             XYChart.Data<Number, Long> capacityData = new XYChart.Data<>(xValue.getValue(), capacity);
             XYChart.Data<Number, Long> usageData = new XYChart.Data<>(xValue.getValue(), usage);
@@ -114,33 +112,16 @@ public class JavaHeapUsageChartViewer extends MemoryChartBase {
 
             Node capacityDataNode = capacityData.getNode();
             Node usageDataNode = usageData.getNode();
-            capacityDataNode.addEventHandler(MouseEvent.MOUSE_ENTERED_TARGET, e -> setTooltipValue(xValue.toString(), capacity, usage, phase, gcid));
-            usageDataNode.addEventHandler(MouseEvent.MOUSE_ENTERED_TARGET, e -> setTooltipValue(xValue.toString(), capacity, usage, phase, gcid));
+            capacityDataNode.lookup(".chart-area-symbol").setStyle(BASE_SYMBOL_STYLE + "-fx-background-color: white, red;");
+            usageDataNode.lookup(".chart-area-symbol").setStyle(BASE_SYMBOL_STYLE + "-fx-background-color: white, blue;");
+            capacityDataNode.addEventHandler(MouseEvent.MOUSE_ENTERED_TARGET, e -> capacityDataNode.setOpacity(1.0d));
+            capacityDataNode.addEventHandler(MouseEvent.MOUSE_EXITED_TARGET, e -> capacityDataNode.setOpacity(0.0d));
+            usageDataNode.addEventHandler(MouseEvent.MOUSE_ENTERED_TARGET, e -> usageDataNode.setOpacity(1.0d));
+            usageDataNode.addEventHandler(MouseEvent.MOUSE_EXITED_TARGET, e -> usageDataNode.setOpacity(0.0d));
+            capacityDataNode.addEventHandler(MouseEvent.MOUSE_ENTERED_TARGET, e -> setTooltipValue(xValue.toString(), capacity, usage, gcid));
+            usageDataNode.addEventHandler(MouseEvent.MOUSE_ENTERED_TARGET, e -> setTooltipValue(xValue.toString(), capacity, usage, gcid));
             capacityDataNode.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> super.showLogWindow(super.gcEventList.get(gcid), "GC ID: " + gcid));
             usageDataNode.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> super.showLogWindow(super.gcEventList.get(gcid), "GC ID: " + gcid));
-
-            Node capacityNodeStyle = capacityDataNode.lookup(".chart-area-symbol");
-            Node usageNodeStyle = usageDataNode.lookup(".chart-area-symbol");
-
-            if(phase.startsWith("Full")){
-                capacityNodeStyle.setStyle(BASE_SYMBOL_STYLE + "-fx-background-color: white, black;");
-                usageNodeStyle.setStyle(BASE_SYMBOL_STYLE + "-fx-background-color: white, black;");
-            }
-            else if(phase.startsWith("Young")) {
-                capacityNodeStyle.setStyle(BASE_SYMBOL_STYLE + "-fx-background-color: white, red;");
-                usageNodeStyle.setStyle(BASE_SYMBOL_STYLE + "-fx-background-color: white, blue;");
-
-                capacityDataNode.setOpacity(0.0d);
-                capacityDataNode.addEventHandler(MouseEvent.MOUSE_ENTERED_TARGET, e -> capacityDataNode.setOpacity(1.0d));
-                capacityDataNode.addEventHandler(MouseEvent.MOUSE_EXITED_TARGET, e -> capacityDataNode.setOpacity(0.0d));
-                usageDataNode.setOpacity(0.0d);
-                usageDataNode.addEventHandler(MouseEvent.MOUSE_ENTERED_TARGET, e -> usageDataNode.setOpacity(1.0d));
-                usageDataNode.addEventHandler(MouseEvent.MOUSE_EXITED_TARGET, e -> usageDataNode.setOpacity(0.0d));
-            }
-            else{
-                capacityNodeStyle.setStyle(BASE_SYMBOL_STYLE + "-fx-background-color: white, orange;");
-                usageNodeStyle.setStyle(BASE_SYMBOL_STYLE + "-fx-background-color: white, orange;");
-            }
 
             Tooltip.install(capacityData.getNode(), tooltip);
             Tooltip.install(usageData.getNode(), tooltip);

@@ -43,7 +43,8 @@ import jp.dip.ysfactory.ulviewer.logdata.LogData;
 import jp.dip.ysfactory.ulviewer.logdata.LogDecoration;
 import jp.dip.ysfactory.ulviewer.logdata.LogParser;
 import jp.dip.ysfactory.ulviewer.ui.chart.ChartViewer;
-import jp.dip.ysfactory.ulviewer.ui.chart.JavaHeapUsageChartViewer;
+import jp.dip.ysfactory.ulviewer.ui.chart.JavaHeapChartViewer;
+import jp.dip.ysfactory.ulviewer.ui.chart.MetaspaceChartViewer;
 import jp.dip.ysfactory.ulviewer.ui.chart.PauseTimeChartViewer;
 
 import java.io.File;
@@ -148,10 +149,13 @@ public class MainController implements Initializable{
     private TextArea logArea;
 
     @FXML
-    private MenuItem javaHeapUsageChart;
+    private MenuItem javaHeapChart;
 
     @FXML
     private MenuItem pauseTimeChart;
+
+    @FXML
+    private MenuItem metaspaceChart;
 
     private Stage stage;
 
@@ -285,11 +289,14 @@ public class MainController implements Initializable{
     private void onChartMenuClicked(ActionEvent event) {
         ChartViewer viewer;
 
-        if(event.getSource().equals(javaHeapUsageChart)){
-            viewer = new JavaHeapUsageChartViewer(logs, chartWizardController);
+        if(event.getSource().equals(javaHeapChart)){
+            viewer = new JavaHeapChartViewer(logs, chartWizardController);
         }
         else if(event.getSource().equals(pauseTimeChart)){
             viewer = new PauseTimeChartViewer(logs, chartWizardController);
+        }
+        else if(event.getSource().equals(metaspaceChart)){
+            viewer = new MetaspaceChartViewer(logs, chartWizardController);
         }
         else{
             throw new RuntimeException("Unknown menu");
