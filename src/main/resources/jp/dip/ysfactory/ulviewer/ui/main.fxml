@@ -55,6 +55,7 @@
                         <MenuItem fx:id="metaspaceChart" mnemonicParsing="false" onAction="#onChartMenuClicked" text="Metaspace" />
                     </items>
                   </Menu>
+                  <MenuItem fx:id="vmOperationChart" mnemonicParsing="false" onAction="#onChartMenuClicked" text="VM Operations" />
               </items>
             </Menu>
         </menus>

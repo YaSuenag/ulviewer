@@ -42,10 +42,7 @@ import javafx.stage.StageStyle;
 import jp.dip.ysfactory.ulviewer.logdata.LogData;
 import jp.dip.ysfactory.ulviewer.logdata.LogDecoration;
 import jp.dip.ysfactory.ulviewer.logdata.LogParser;
-import jp.dip.ysfactory.ulviewer.ui.chart.ChartViewer;
-import jp.dip.ysfactory.ulviewer.ui.chart.JavaHeapChartViewer;
-import jp.dip.ysfactory.ulviewer.ui.chart.MetaspaceChartViewer;
-import jp.dip.ysfactory.ulviewer.ui.chart.PauseTimeChartViewer;
+import jp.dip.ysfactory.ulviewer.ui.chart.*;
 
 import java.io.File;
 import java.io.IOException;
@@ -156,6 +153,9 @@ public class MainController implements Initializable{
 
     @FXML
     private MenuItem metaspaceChart;
+
+    @FXML
+    private MenuItem vmOperationChart;
 
     private Stage stage;
 
@@ -297,6 +297,9 @@ public class MainController implements Initializable{
         }
         else if(event.getSource().equals(metaspaceChart)){
             viewer = new MetaspaceChartViewer(logs, chartWizardController);
+        }
+        else if(event.getSource().equals(vmOperationChart)){
+            viewer = new VMOperationChartViewer(logs, chartWizardController);
         }
         else{
             throw new RuntimeException("Unknown menu");

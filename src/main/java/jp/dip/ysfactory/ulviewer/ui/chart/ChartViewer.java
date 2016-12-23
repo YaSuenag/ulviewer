@@ -18,6 +18,7 @@
  */
 package jp.dip.ysfactory.ulviewer.ui.chart;
 
+import java.time.ZoneOffset;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -36,7 +37,44 @@ import jp.dip.ysfactory.ulviewer.ui.MainController;
 public abstract class ChartViewer {
 
     private static final Font MONOSPACE_FONT = new Font("Monospaced Regular", 12.0d);
-    
+
+    public static class XValue{
+
+        private final Number value;
+
+        private final String str;
+
+        public XValue(Number value, String str){
+            this.value = value;
+            this.str = str;
+        }
+
+        public Number getValue(){
+            return value;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+
+            XValue xValue = (XValue) o;
+
+            return value.equals(xValue.value);
+        }
+
+        @Override
+        public int hashCode() {
+            return value.hashCode();
+        }
+
+        @Override
+        public String toString(){
+            return str;
+        }
+
+    }
+
     protected final List<LogData> logdata;
     
     protected final ChartWizardController chartWizardController;
@@ -65,6 +103,34 @@ public abstract class ChartViewer {
         window.setTitle(title);
 
         return window;
+    }
+
+    public XValue getXValue(LogData log, LogDecoration decoration){
+        switch(decoration){
+            case TIME:
+                return new XValue(log.getTime().toInstant().toEpochMilli(), log.getTime().toString());
+
+            case UTCTIME:
+                return new XValue(log.getUtcTime().toInstant(ZoneOffset.UTC).toEpochMilli(), log.getUtcTime().toString());
+
+            case UPTIME:
+                return new XValue(log.getUptime(), log.getUptime() + "s");
+
+            case TIMEMILLIS:
+                return new XValue(log.getTimeMillis(), log.getTimeMillis() + "ms");
+
+            case UPTIMEMILLIS:
+                return new XValue(log.getUptimeMillis(), log.getUptimeMillis() + "ms");
+
+            case TIMENANOS:
+                return new XValue(log.getTimeNanos(), log.getTimeNanos() + "ns");
+
+            case UPTIMENANOS:
+                return new XValue(log.getUptimeNanos(), log.getUptimeNanos() + "ns");
+
+            default:
+                throw new RuntimeException("Unexpected time range");
+        }
     }
 
     protected void showLogWindow(List<LogData> target, String title){

@@ -50,6 +50,11 @@ You can set filters through log decoration. You can choose decoration from [Comb
 * [Chart] -> [Memory] -> [Metaspace]
 * You can check Metaspace usage and capacity. This chart shows Metaspace GC event.
 
+##### VM Operations
+
+* [Chart] -> [VM Operations]
+* You can check all VM operations.
+
 ## How to build
 
 You have to use JDK 8 and JavaFX 8.

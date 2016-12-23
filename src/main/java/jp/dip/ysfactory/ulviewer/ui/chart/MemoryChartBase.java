@@ -19,37 +19,13 @@
 package jp.dip.ysfactory.ulviewer.ui.chart;
 
 import jp.dip.ysfactory.ulviewer.logdata.LogData;
-import jp.dip.ysfactory.ulviewer.logdata.LogDecoration;
 import jp.dip.ysfactory.ulviewer.ui.ChartWizardController;
 
-import java.time.ZoneOffset;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public abstract class MemoryChartBase extends ChartViewer{
-
-    public static class XValue{
-
-        private final Number value;
-
-        private final String str;
-
-        public XValue(Number value, String str){
-            this.value = value;
-            this.str = str;
-        }
-
-        public Number getValue(){
-            return value;
-        }
-
-        @Override
-        public String toString(){
-            return str;
-        }
-
-    }
 
     private static final Pattern GC_EVENT_PATTERN = Pattern.compile("^(\\[.+?\\])+ GC\\((\\d+)\\) (.+)$");
 
@@ -100,34 +76,6 @@ public abstract class MemoryChartBase extends ChartViewer{
         gcId = id;
         logBody = body;
         return true;
-    }
-
-    public XValue getXValue(LogData log, LogDecoration decoration){
-        switch(decoration){
-            case TIME:
-                return new XValue(log.getTime().toInstant().toEpochMilli(), log.getTime().toString());
-
-            case UTCTIME:
-                return new XValue(log.getUtcTime().toInstant(ZoneOffset.UTC).toEpochMilli(), log.getUtcTime().toString());
-
-            case UPTIME:
-                return new XValue(log.getUptime(), log.getUptime() + "s");
-
-            case TIMEMILLIS:
-                return new XValue(log.getTimeMillis(), log.getTimeMillis() + "ms");
-
-            case UPTIMEMILLIS:
-                return new XValue(log.getUptimeMillis(), log.getUptimeMillis() + "ms");
-
-            case TIMENANOS:
-                return new XValue(log.getTimeNanos(), log.getTimeNanos() + "ns");
-
-            case UPTIMENANOS:
-                return new XValue(log.getUptimeNanos(), log.getUptimeNanos() + "ns");
-
-            default:
-                throw new RuntimeException("Unexpected time range");
-        }
     }
 
     public long getGcId() {
