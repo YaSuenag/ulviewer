@@ -97,7 +97,7 @@ public class SamplingWizardController implements Initializable{
         wizard.setScene(getScene());
         wizard.initModality(Modality.APPLICATION_MODAL);
         wizard.setResizable(false);
-        wizard.setTitle("Chart wizard");
+        wizard.setTitle("Sampling wizard");
         wizard.showAndWait();
 
         return isOkClicked();
