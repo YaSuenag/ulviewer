@@ -59,6 +59,11 @@
                   <MenuItem fx:id="vmOperationChart" mnemonicParsing="false" onAction="#onChartMenuClicked" text="VM Operations" />
               </items>
             </Menu>
+            <Menu mnemonicParsing="false" text="Table">
+              <items>
+                <MenuItem mnemonicParsing="false" onAction="#onClassLoadingClicked" text="Class loading" />
+              </items>
+            </Menu>
         </menus>
       </MenuBar>
       <SplitPane dividerPositions="0.3" prefHeight="10000.0" prefWidth="10000.0">

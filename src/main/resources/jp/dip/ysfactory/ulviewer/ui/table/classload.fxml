@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+  Copyright (C) 2016 Yasumasa Suenaga
+
+  This file is part of UL Viewer.
+
+  UL Viewer is free software: you can redistribute it and/or modify
+  it under the terms of the GNU Lesser General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
+
+  UL Viewer is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU Lesser General Public License for more details.
+
+  You should have received a copy of the GNU Lesser General Public License
+  along with UL Viewer.  If not, see <http://www.gnu.org/licenses/>.
+-->
+
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+
+<TableView fx:id="classTable" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="450.0" prefWidth="800.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8.0.60" fx:controller="jp.dip.ysfactory.ulviewer.ui.table.ClassLoadController">
+  <columns>
+    <TableColumn fx:id="klassColumn" prefWidth="120.0" text="klass" />
+    <TableColumn fx:id="nameColumn" prefWidth="500.0" text="name" />
+      <TableColumn fx:id="loadColumn" prefWidth="75.0" text="load" />
+      <TableColumn fx:id="unloadColumn" prefWidth="75.0" text="unload" />
+  </columns>
+</TableView>

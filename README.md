@@ -60,6 +60,13 @@ You can set filters through log decoration. You can choose decoration from [Comb
 * [Chart] -> [VM Operations]
 * You can check all VM operations.
 
+#### Show data table
+
+##### Class loading/unloading
+
+* [Table] -> [Class loading]
+* You can check class loading / unloading information.
+
 ## How to build
 
 You have to use JDK 8 and JavaFX 8.

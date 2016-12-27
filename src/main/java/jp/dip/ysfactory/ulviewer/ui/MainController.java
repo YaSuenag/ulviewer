@@ -43,6 +43,7 @@ import jp.dip.ysfactory.ulviewer.logdata.LogData;
 import jp.dip.ysfactory.ulviewer.logdata.LogDecoration;
 import jp.dip.ysfactory.ulviewer.logdata.LogParser;
 import jp.dip.ysfactory.ulviewer.ui.chart.*;
+import jp.dip.ysfactory.ulviewer.ui.table.ClassLoadController;
 
 import java.io.File;
 import java.io.IOException;
@@ -171,6 +172,10 @@ public class MainController implements Initializable{
 
     private ClassHistoController classHistoController;
 
+    private Scene classLoadScene;
+
+    private ClassLoadController classLoadController;
+
     private List<LogDecoration> decorations;
 
     private List<LogData> logs;
@@ -184,6 +189,7 @@ public class MainController implements Initializable{
         FXMLLoader chartWizardLoader = new FXMLLoader(getClass().getResource("chart-wizard.fxml"));
         FXMLLoader samplingWizardLoader = new FXMLLoader(getClass().getResource("sampling-wizard.fxml"));
         FXMLLoader classHistoLoader = new FXMLLoader(getClass().getResource("chart/classhisto.fxml"));
+        FXMLLoader classLoadLoader = new FXMLLoader(getClass().getResource("table/classload.fxml"));
 
         try{
             logParseWizardLoader.load();
@@ -196,6 +202,9 @@ public class MainController implements Initializable{
             classHistoLoader.load();
             classHistoScene = new Scene(classHistoLoader.getRoot());
             classHistoController = classHistoLoader.getController();
+            classLoadLoader.load();
+            classLoadScene = new Scene(classLoadLoader.getRoot());
+            classLoadController = classLoadLoader.getController();
         }
         catch(IOException e){
             throw new UncheckedIOException(e);
@@ -333,6 +342,20 @@ public class MainController implements Initializable{
             window.setScene(classHistoScene);
             window.initModality(Modality.NONE);
             window.setTitle("Class histogram");
+
+            window.show();
+        }
+    }
+
+    @FXML
+    private void onClassLoadingClicked(ActionEvent event){
+        if(samplingWizardController.showDialog(decoratorBox.getItems())){
+            classLoadController.setLog(logs, samplingWizardController.getPid(), samplingWizardController.getHost());
+
+            Stage window = new Stage(StageStyle.UTILITY);
+            window.setScene(classLoadScene);
+            window.initModality(Modality.NONE);
+            window.setTitle("Class loading");
 
             window.show();
         }
