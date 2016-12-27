@@ -165,6 +165,12 @@ public class MainController implements Initializable{
 
     private ChartWizardController chartWizardController;
 
+    private SamplingWizardController samplingWizardController;
+
+    private Scene classHistoScene;
+
+    private ClassHistoController classHistoController;
+
     private List<LogDecoration> decorations;
 
     private List<LogData> logs;
@@ -176,6 +182,8 @@ public class MainController implements Initializable{
     public void initialize(URL location, ResourceBundle resources) {
         FXMLLoader logParseWizardLoader = new FXMLLoader(getClass().getResource("logparse-wizard.fxml"));
         FXMLLoader chartWizardLoader = new FXMLLoader(getClass().getResource("chart-wizard.fxml"));
+        FXMLLoader samplingWizardLoader = new FXMLLoader(getClass().getResource("sampling-wizard.fxml"));
+        FXMLLoader classHistoLoader = new FXMLLoader(getClass().getResource("chart/classhisto.fxml"));
 
         try{
             logParseWizardLoader.load();
@@ -183,6 +191,11 @@ public class MainController implements Initializable{
             logParseWizardScene = new Scene(logParseWizardLoader.getRoot());
             chartWizardLoader.load();
             chartWizardController = chartWizardLoader.getController();
+            samplingWizardLoader.load();
+            samplingWizardController = samplingWizardLoader.getController();
+            classHistoLoader.load();
+            classHistoScene = new Scene(classHistoLoader.getRoot());
+            classHistoController = classHistoLoader.getController();
         }
         catch(IOException e){
             throw new UncheckedIOException(e);
@@ -309,6 +322,20 @@ public class MainController implements Initializable{
             viewer.draw();
         }
 
+    }
+
+    @FXML
+    private void onClassHistoClicked(ActionEvent event){
+        if(samplingWizardController.showDialog(decoratorBox.getItems())){
+            classHistoController.setLog(logs, samplingWizardController.getPid(), samplingWizardController.getHost());
+
+            Stage window = new Stage(StageStyle.UTILITY);
+            window.setScene(classHistoScene);
+            window.initModality(Modality.NONE);
+            window.setTitle("Class histogram");
+
+            window.show();
+        }
     }
 
 }

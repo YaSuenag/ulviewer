@@ -50,6 +50,11 @@ You can set filters through log decoration. You can choose decoration from [Comb
 * [Chart] -> [Memory] -> [Metaspace]
 * You can check Metaspace usage and capacity. This chart shows Metaspace GC event.
 
+##### Class histogram
+
+* [Chart] -> [Memory] -> [Class histogram]
+* You can check class histogram when Full GC is invoked.
+
 ##### VM Operations
 
 * [Chart] -> [VM Operations]
