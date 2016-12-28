@@ -67,6 +67,11 @@ You can set filters through log decoration. You can choose decoration from [Comb
 * [Table] -> [Class loading]
 * You can check class loading / unloading information.
 
+##### Age table
+
+* [Table] -> [Age table]
+* You can check age table when GC is invoked.
+
 ## How to build
 
 You have to use JDK 8 and JavaFX 8.

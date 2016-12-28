@@ -31,6 +31,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import jp.dip.ysfactory.ulviewer.logdata.LogData;
+import jp.dip.ysfactory.ulviewer.logdata.LogTimeValue;
 import jp.dip.ysfactory.ulviewer.ui.ChartWizardController;
 
 import java.util.Arrays;
@@ -105,17 +106,17 @@ public class JavaHeapChartViewer extends MemoryChartBase {
             phase = matcher.group(1);
             usage = Long.parseLong(matcher.group(2));
             capacity = Long.parseLong(matcher.group(3));
-            MemoryChartBase.XValue xValue = super.getXValue(log, super.chartWizardController.getTimeRange());
+            LogTimeValue logTimeValue = LogTimeValue.getLogTimeValue(log, super.chartWizardController.getTimeRange());
 
-            XYChart.Data<Number, Long> capacityData = new XYChart.Data<>(xValue.getValue(), capacity);
-            XYChart.Data<Number, Long> usageData = new XYChart.Data<>(xValue.getValue(), usage);
+            XYChart.Data<Number, Long> capacityData = new XYChart.Data<>(logTimeValue.getValue(), capacity);
+            XYChart.Data<Number, Long> usageData = new XYChart.Data<>(logTimeValue.getValue(), usage);
             capacitySeries.getData().add(capacityData);
             usageSeries.getData().add(usageData);
 
             Node capacityDataNode = capacityData.getNode();
             Node usageDataNode = usageData.getNode();
-            capacityDataNode.addEventHandler(MouseEvent.MOUSE_ENTERED_TARGET, e -> setTooltipValue(xValue.toString(), capacity, usage, phase, gcid));
-            usageDataNode.addEventHandler(MouseEvent.MOUSE_ENTERED_TARGET, e -> setTooltipValue(xValue.toString(), capacity, usage, phase, gcid));
+            capacityDataNode.addEventHandler(MouseEvent.MOUSE_ENTERED_TARGET, e -> setTooltipValue(logTimeValue.toString(), capacity, usage, phase, gcid));
+            usageDataNode.addEventHandler(MouseEvent.MOUSE_ENTERED_TARGET, e -> setTooltipValue(logTimeValue.toString(), capacity, usage, phase, gcid));
             capacityDataNode.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> super.showLogWindow(super.gcEventList.get(gcid), "GC ID: " + gcid));
             usageDataNode.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> super.showLogWindow(super.gcEventList.get(gcid), "GC ID: " + gcid));
 

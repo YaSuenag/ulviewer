@@ -43,6 +43,7 @@ import jp.dip.ysfactory.ulviewer.logdata.LogData;
 import jp.dip.ysfactory.ulviewer.logdata.LogDecoration;
 import jp.dip.ysfactory.ulviewer.logdata.LogParser;
 import jp.dip.ysfactory.ulviewer.ui.chart.*;
+import jp.dip.ysfactory.ulviewer.ui.table.AgeTableController;
 import jp.dip.ysfactory.ulviewer.ui.table.ClassLoadController;
 
 import java.io.File;
@@ -158,6 +159,15 @@ public class MainController implements Initializable{
     @FXML
     private MenuItem vmOperationChart;
 
+    @FXML
+    private MenuItem classHisto;
+
+    @FXML
+    private MenuItem classLoad;
+
+    @FXML
+    private MenuItem ageTable;
+
     private Stage stage;
 
     private LogParseWizardController logParseWizardController;
@@ -176,6 +186,10 @@ public class MainController implements Initializable{
 
     private ClassLoadController classLoadController;
 
+    private Scene ageTableScene;
+
+    private AgeTableController ageTableController;
+
     private List<LogDecoration> decorations;
 
     private List<LogData> logs;
@@ -190,6 +204,7 @@ public class MainController implements Initializable{
         FXMLLoader samplingWizardLoader = new FXMLLoader(getClass().getResource("sampling-wizard.fxml"));
         FXMLLoader classHistoLoader = new FXMLLoader(getClass().getResource("chart/classhisto.fxml"));
         FXMLLoader classLoadLoader = new FXMLLoader(getClass().getResource("table/classload.fxml"));
+        FXMLLoader ageTableLoader = new FXMLLoader(getClass().getResource("table/agetable.fxml"));
 
         try{
             logParseWizardLoader.load();
@@ -205,6 +220,9 @@ public class MainController implements Initializable{
             classLoadLoader.load();
             classLoadScene = new Scene(classLoadLoader.getRoot());
             classLoadController = classLoadLoader.getController();
+            ageTableLoader.load();
+            ageTableScene = new Scene(ageTableLoader.getRoot());
+            ageTableController = ageTableLoader.getController();
         }
         catch(IOException e){
             throw new UncheckedIOException(e);
@@ -334,28 +352,26 @@ public class MainController implements Initializable{
     }
 
     @FXML
-    private void onClassHistoClicked(ActionEvent event){
-        if(samplingWizardController.showDialog(decoratorBox.getItems())){
-            classHistoController.setLog(logs, samplingWizardController.getPid(), samplingWizardController.getHost());
-
+    private void onSamplingWindowMenuClicked(ActionEvent event){
+        if(samplingWizardController.showDialog(decoratorBox.getItems())) {
             Stage window = new Stage(StageStyle.UTILITY);
-            window.setScene(classHistoScene);
             window.initModality(Modality.NONE);
-            window.setTitle("Class histogram");
 
-            window.show();
-        }
-    }
-
-    @FXML
-    private void onClassLoadingClicked(ActionEvent event){
-        if(samplingWizardController.showDialog(decoratorBox.getItems())){
-            classLoadController.setLog(logs, samplingWizardController.getPid(), samplingWizardController.getHost());
-
-            Stage window = new Stage(StageStyle.UTILITY);
-            window.setScene(classLoadScene);
-            window.initModality(Modality.NONE);
-            window.setTitle("Class loading");
+            if(event.getSource().equals(classHisto)){
+                classHistoController.setLog(logs, samplingWizardController.getPid(), samplingWizardController.getHost());
+                window.setScene(classHistoScene);
+                window.setTitle("Class histogram");
+            }
+            else if(event.getSource().equals(classLoad)){
+                classLoadController.setLog(logs, samplingWizardController.getPid(), samplingWizardController.getHost());
+                window.setScene(classLoadScene);
+                window.setTitle("Class loading");
+            }
+            else if(event.getSource().equals(ageTable)){
+                ageTableController.setLog(logs, samplingWizardController.getPid(), samplingWizardController.getHost());
+                window.setScene(ageTableScene);
+                window.setTitle("Age table");
+            }
 
             window.show();
         }

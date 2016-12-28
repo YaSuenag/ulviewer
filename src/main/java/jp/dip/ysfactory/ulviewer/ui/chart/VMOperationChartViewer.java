@@ -28,6 +28,7 @@ import javafx.scene.control.Tooltip;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import jp.dip.ysfactory.ulviewer.logdata.LogData;
+import jp.dip.ysfactory.ulviewer.logdata.LogTimeValue;
 import jp.dip.ysfactory.ulviewer.ui.ChartWizardController;
 
 import java.util.*;
@@ -42,7 +43,7 @@ public class VMOperationChartViewer extends ChartViewer {
 
     private final Tooltip tooltip;
 
-    private LinkedHashMap<ChartViewer.XValue, List<LogData>> vmOpMap;
+    private LinkedHashMap<LogTimeValue, List<LogData>> vmOpMap;
 
     public VMOperationChartViewer(List<LogData> logdata, ChartWizardController chartWizardController) {
         super(logdata, chartWizardController);
@@ -81,7 +82,7 @@ public class VMOperationChartViewer extends ChartViewer {
                 Matcher matcher = VMOP_START_PATTERN.matcher(log.getMessage());
 
                 if(matcher.matches()){
-                    vmOpList = vmOpMap.computeIfAbsent(super.getXValue(log, super.chartWizardController.getTimeRange()), k -> new ArrayList<>());
+                    vmOpList = vmOpMap.computeIfAbsent(LogTimeValue.getLogTimeValue(log, super.chartWizardController.getTimeRange()), k -> new ArrayList<>());
                     vmOpList.add(log);
                 }
 
@@ -110,8 +111,8 @@ public class VMOperationChartViewer extends ChartViewer {
         chart.setLegendVisible(false);
         Stage stage = super.createStage(chart, "VM Operations");
 
-        for(Map.Entry<XValue, List<LogData>> entry : vmOpMap.entrySet()){
-            double elapsedTime = super.getXValue(entry.getValue().get(entry.getValue().size() - 1), super.chartWizardController.getTimeRange()).getValue().doubleValue() - entry.getKey().getValue().doubleValue();
+        for(Map.Entry<LogTimeValue, List<LogData>> entry : vmOpMap.entrySet()){
+            double elapsedTime = LogTimeValue.getLogTimeValue(entry.getValue().get(entry.getValue().size() - 1), super.chartWizardController.getTimeRange()).getValue().doubleValue() - entry.getKey().getValue().doubleValue();
             XYChart.Data<Number, Number> data = new XYChart.Data<>(entry.getKey().getValue(), elapsedTime);
             series.getData().add(data);
 

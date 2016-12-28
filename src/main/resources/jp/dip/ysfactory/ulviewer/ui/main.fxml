@@ -53,7 +53,7 @@
                         <MenuItem fx:id="javaHeapChart" mnemonicParsing="false" onAction="#onChartMenuClicked" text="Java heap" />
                         <MenuItem fx:id="pauseTimeChart" mnemonicParsing="false" onAction="#onChartMenuClicked" text="Pause time" />
                         <MenuItem fx:id="metaspaceChart" mnemonicParsing="false" onAction="#onChartMenuClicked" text="Metaspace" />
-                        <MenuItem fx:id="classHisto" mnemonicParsing="false" onAction="#onClassHistoClicked" text="Class histogram" />
+                        <MenuItem fx:id="classHisto" mnemonicParsing="false" onAction="#onSamplingWindowMenuClicked" text="Class histogram" />
                     </items>
                   </Menu>
                   <MenuItem fx:id="vmOperationChart" mnemonicParsing="false" onAction="#onChartMenuClicked" text="VM Operations" />
@@ -61,7 +61,8 @@
             </Menu>
             <Menu mnemonicParsing="false" text="Table">
               <items>
-                <MenuItem mnemonicParsing="false" onAction="#onClassLoadingClicked" text="Class loading" />
+                  <MenuItem fx:id="classLoad" mnemonicParsing="false" onAction="#onSamplingWindowMenuClicked" text="Class loading" />
+                  <MenuItem fx:id="ageTable" mnemonicParsing="false" onAction="#onSamplingWindowMenuClicked" text="Age table" />
               </items>
             </Menu>
         </menus>

@@ -28,6 +28,7 @@ import javafx.scene.control.Tooltip;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import jp.dip.ysfactory.ulviewer.logdata.LogData;
+import jp.dip.ysfactory.ulviewer.logdata.LogTimeValue;
 import jp.dip.ysfactory.ulviewer.ui.ChartWizardController;
 
 import java.util.DoubleSummaryStatistics;
@@ -89,9 +90,9 @@ public class PauseTimeChartViewer extends MemoryChartBase {
 
             phase = matcher.group(1);
             time = Double.parseDouble(matcher.group(2));
-            MemoryChartBase.XValue xValue = super.getXValue(log, super.chartWizardController.getTimeRange());
+            LogTimeValue logTimeValue = LogTimeValue.getLogTimeValue(log, super.chartWizardController.getTimeRange());
 
-            XYChart.Data<Number, Number> data = new XYChart.Data<>(xValue.getValue(), time);
+            XYChart.Data<Number, Number> data = new XYChart.Data<>(logTimeValue.getValue(), time);
             if(phase.startsWith("Full")){
                 fullSeries.getData().add(data);
                 data.getNode().setStyle("-fx-background-color: black;");
@@ -105,7 +106,7 @@ public class PauseTimeChartViewer extends MemoryChartBase {
                 data.getNode().setStyle("-fx-background-color: orange;");
             }
 
-            data.getNode().addEventHandler(MouseEvent.MOUSE_ENTERED_TARGET, e -> setTooltipValue(xValue.toString(), phase, gcid));
+            data.getNode().addEventHandler(MouseEvent.MOUSE_ENTERED_TARGET, e -> setTooltipValue(logTimeValue.toString(), phase, gcid));
             data.getNode().addEventHandler(MouseEvent.MOUSE_CLICKED, e -> super.showLogWindow(super.gcEventList.get(gcid), "GC ID: " + gcid));
             Tooltip.install(data.getNode(), tooltip);
         }
