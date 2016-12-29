@@ -33,31 +33,48 @@ You can set filters through log decoration. You can choose decoration from [Comb
 
 #### Drawing chart
 
+If you want to draw chart(s), you have to add tag(s) which indicates time to `-Xlog` option as below:
+
+* `time` (`t`)
+* `utctime` (`utc`)
+* `uptime` (`u`)
+* `timemillis` (`tm`)
+* `uptimemillis` (`um`)
+* `timenanos` (`tn`)
+* `uptimenanos` (`un`)
+
+In addition, you have to add `tags` (`tg`) to log tags.
+
 ##### Java heap chart
 
 * [Chart] -> [Memory] -> [Java heap]
+* You need to open `info` level log (`gc=info`).
 * You can check Java heap memory. This chart shows all STW collection (all major/minor GCs)
 * You can also check specific GC events when you click the plot on the chart.
 
 ##### GC pause time chart
 
 * [Chart] -> [Memory] -> [Pause time]
+* You need to open `info` level log (`gc=info`).
 * You can check GC STW time.
 * You can also check specific GC events when you click the plot on the chart.
 
 ##### Metaspace chart
 
 * [Chart] -> [Memory] -> [Metaspace]
+* You need to open `info` level log (`gc+metaspace=info`).
 * You can check Metaspace usage and capacity. This chart shows Metaspace GC event.
 
 ##### Class histogram
 
 * [Chart] -> [Memory] -> [Class histogram]
+* You need to open `trace` level log (`gc+classhisto*=trace`).
 * You can check class histogram when Full GC is invoked.
 
 ##### VM Operations
 
 * [Chart] -> [VM Operations]
+* You need to open `debug` level log (`vmoperation=debug`).
 * You can check all VM operations.
 
 #### Show data table
@@ -65,11 +82,13 @@ You can set filters through log decoration. You can choose decoration from [Comb
 ##### Class loading/unloading
 
 * [Table] -> [Class loading]
+* You need to open `debug` level log for class loading, and need to open `info` level log for class unloading (`class+load=debug,class+unload=info`).
 * You can check class loading / unloading information.
 
 ##### Age table
 
 * [Table] -> [Age table]
+* You need to open `trace` level log (`gc+age=trace`).
 * You can check age table when GC is invoked.
 
 ## How to build
