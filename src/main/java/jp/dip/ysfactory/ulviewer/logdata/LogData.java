@@ -137,6 +137,7 @@ public class LogData {
                 case TAGS:
                     tags = Arrays.stream(decorationStr.split(","))
                                   .map(String::trim)
+                                  .map(String::intern)
                                   .collect(Collectors.toSet());
                     break;
             }
