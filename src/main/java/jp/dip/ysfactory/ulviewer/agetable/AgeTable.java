@@ -19,6 +19,7 @@
 package jp.dip.ysfactory.ulviewer.agetable;
 
 import jp.dip.ysfactory.ulviewer.logdata.LogData;
+import jp.dip.ysfactory.ulviewer.logdata.LogLevel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -67,7 +68,7 @@ public class AgeTable {
     }
 
     private static boolean shouldProcess(LogData log, int pid, String hostname){
-        boolean notValid = !log.getLevel().equals("trace") ||
+        boolean notValid = (log.getLevel() != LogLevel.trace) ||
                             (log.getTags().size() != 2) ||
                             !(log.getTags().contains("gc") && log.getTags().contains("age")) ||
                             (pid != log.getPid()) ||

@@ -59,7 +59,7 @@ public class LogData {
 
     private int tid;
 
-    private String level;
+    private LogLevel level;
 
     private Set<String> tags;
 
@@ -76,7 +76,7 @@ public class LogData {
         hostname = "<Unknown>";
         pid = -1;
         tid = -1;
-        level = "<Unknown>";
+        level = LogLevel.unknown;
         tags = Collections.singleton("<Unknown>");
         message = logline;
 
@@ -131,7 +131,7 @@ public class LogData {
                     break;
 
                 case LEVEL:
-                    level = decorationStr.trim();
+                    level = LogLevel.valueOf(decorationStr.trim());
                     break;
 
                 case TAGS:
@@ -183,7 +183,7 @@ public class LogData {
         return tid;
     }
 
-    public String getLevel() {
+    public LogLevel getLevel() {
         return level;
     }
 

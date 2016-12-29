@@ -19,6 +19,7 @@
 package jp.dip.ysfactory.ulviewer.ui.chart;
 
 import jp.dip.ysfactory.ulviewer.logdata.LogData;
+import jp.dip.ysfactory.ulviewer.logdata.LogLevel;
 import jp.dip.ysfactory.ulviewer.ui.ChartWizardController;
 
 import java.util.*;
@@ -69,7 +70,7 @@ public abstract class MemoryChartBase extends ChartViewer{
         String body = matcher.group(3);
         gcEventList.computeIfAbsent(id, k -> new ArrayList<>()).add(log);
 
-        if(!log.getLevel().equals("info")){
+        if(log.getLevel() != LogLevel.info){
             return false;
         }
 

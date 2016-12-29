@@ -28,6 +28,7 @@ import javafx.scene.control.Tooltip;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import jp.dip.ysfactory.ulviewer.logdata.LogData;
+import jp.dip.ysfactory.ulviewer.logdata.LogLevel;
 import jp.dip.ysfactory.ulviewer.logdata.LogTimeValue;
 import jp.dip.ysfactory.ulviewer.ui.ChartWizardController;
 
@@ -76,9 +77,9 @@ public class VMOperationChartViewer extends ChartViewer {
                 }
 
             }
-            else if(log.getLevel().equals("debug") &&
-                    (log.getTags().size() == 1) &&
-                    log.getTags().contains("vmoperation")){
+            else if((log.getLevel() == LogLevel.debug) &&
+                     (log.getTags().size() == 1) &&
+                     log.getTags().contains("vmoperation")){
                 Matcher matcher = VMOP_START_PATTERN.matcher(log.getMessage());
 
                 if(matcher.matches()){

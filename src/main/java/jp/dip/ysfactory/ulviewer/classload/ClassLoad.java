@@ -19,6 +19,7 @@
 package jp.dip.ysfactory.ulviewer.classload;
 
 import jp.dip.ysfactory.ulviewer.logdata.LogData;
+import jp.dip.ysfactory.ulviewer.logdata.LogLevel;
 
 import java.util.*;
 import java.util.regex.Matcher;
@@ -98,7 +99,7 @@ public class ClassLoad {
                 continue;
             }
 
-            if(log.getLevel().equals("debug") && log.getTags().contains("load")){
+            if((log.getLevel() == LogLevel.debug) && log.getTags().contains("load")){
                 Matcher matcher = LOAD_PATTERN.matcher(log.getMessage());
 
                 if(matcher.matches()){
@@ -109,7 +110,7 @@ public class ClassLoad {
                 }
 
             }
-            else if(log.getLevel().equals("info") && log.getTags().contains("unload")){
+            else if((log.getLevel() == LogLevel.info) && log.getTags().contains("unload")){
                 Matcher matcher = UNLOAD_PATTERN.matcher(log.getMessage());
 
                 if(matcher.matches()){
