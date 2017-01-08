@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <!--
-  Copyright (C) 2016 Yasumasa Suenaga
+  Copyright (C) 2016-2017 Yasumasa Suenaga
 
   This file is part of UL Viewer.
 
@@ -30,6 +30,7 @@
 <?import javafx.scene.control.SeparatorMenuItem?>
 <?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
@@ -86,15 +87,27 @@
                   <ListView fx:id="visibleList" prefHeight="10000.0" prefWidth="10000.0" />
                </children>
             </VBox>
-          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="10000.0" prefWidth="10000.0">
+            <VBox minHeight="0.0" minWidth="0.0" prefHeight="10000.0" prefWidth="10000.0" spacing="5.0">
                <children>
-                  <TextArea fx:id="logArea" editable="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                  <HBox spacing="10.0">
+                     <children>
+                        <TextField fx:id="searchText" onAction="#onNextSearchClicked" promptText="search text" />
+                        <ButtonBar buttonMinWidth="10.0" buttonOrder="U">
+                          <buttons>
+                            <Button mnemonicParsing="false" onAction="#onPreviousSearchClicked" text="&lt;" />
+                              <Button mnemonicParsing="false" onAction="#onNextSearchClicked" text="&gt;" />
+                          </buttons>
+                        </ButtonBar>
+                        <Label fx:id="notFoundLabel" text="Not found" visible="false" />
+                     </children>
+                  </HBox>
+                  <TextArea fx:id="logArea" editable="false" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" VBox.vgrow="ALWAYS">
                      <font>
                         <Font name="Monospaced Regular" size="12.0" />
                      </font>
                   </TextArea>
                </children>
-            </AnchorPane>
+            </VBox>
         </items>
       </SplitPane>
    </children>

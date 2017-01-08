@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016 Yasumasa Suenaga
+ * Copyright (C) 2016-2017 Yasumasa Suenaga
  *
  * This file is part of UL Viewer.
  *
@@ -30,11 +30,9 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.ListView;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.TextArea;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.CheckBoxListCell;
+import javafx.scene.input.KeyEvent;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -168,6 +166,12 @@ public class MainController implements Initializable{
     @FXML
     private MenuItem ageTable;
 
+    @FXML
+    private TextField searchText;
+
+    @FXML
+    private Label notFoundLabel;
+
     private Stage stage;
 
     private LogParseWizardController logParseWizardController;
@@ -233,9 +237,11 @@ public class MainController implements Initializable{
                       .selectedItemProperty()
                       .addListener((v, o, n) -> Optional.ofNullable(n)
                                                         .ifPresent(d -> visibleList.getItems().setAll(d.valueProperty())));
+        searchText.textProperty().addListener((v, o, n) -> onSearchTextChanged(n));
     }
 
     private void showLog(){
+        notFoundLabel.setVisible(false);
         logArea.setText(logs.stream()
                               .filter(l -> decoratorBox.getItems()
                                                          .stream()
@@ -375,6 +381,75 @@ public class MainController implements Initializable{
 
             window.show();
         }
+    }
+
+    private void onSearchTextChanged(String newSearchText) {
+        int startPos = Math.min(logArea.getAnchor(), logArea.getCaretPosition());
+
+        if(newSearchText.isEmpty()){
+            logArea.positionCaret(startPos);
+            notFoundLabel.setVisible(false);
+        }
+        else {
+            int index = logArea.getText().indexOf(newSearchText, startPos);
+
+            if (index == -1) {
+                logArea.positionCaret(startPos);
+                notFoundLabel.setVisible(true);
+            } else {
+                logArea.selectRange(index, index + newSearchText.length());
+                notFoundLabel.setVisible(false);
+            }
+
+        }
+
+    }
+
+    @FXML
+    private void onNextSearchClicked(ActionEvent actionEvent) {
+        String keyword = searchText.getText();
+
+        if(keyword.isEmpty()){
+            notFoundLabel.setVisible(false);
+            return;
+        }
+
+        int index = logArea.getText().indexOf(keyword, Math.max(logArea.getAnchor(), logArea.getCaretPosition()));
+
+        if(index == -1){
+            notFoundLabel.setVisible(true);
+        }
+        else{
+            notFoundLabel.setVisible(false);
+            logArea.selectRange(index, index + keyword.length());
+        }
+
+    }
+
+    @FXML
+    private void onPreviousSearchClicked(ActionEvent actionEvent) {
+        String keyword = searchText.getText();
+        int startPos = Math.min(logArea.getAnchor(), logArea.getCaretPosition()) - 1;
+
+        if (keyword.isEmpty()) {
+            notFoundLabel.setVisible(false);
+            return;
+        }
+        else if(startPos < keyword.length()){
+            notFoundLabel.setVisible(true);
+            return;
+        }
+
+        int index = logArea.getText().lastIndexOf(keyword, startPos);
+
+        if(index == -1) {
+            notFoundLabel.setVisible(true);
+        }
+        else{
+            notFoundLabel.setVisible(false);
+            logArea.selectRange(index, index + keyword.length());
+        }
+
     }
 
 }

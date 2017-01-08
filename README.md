@@ -29,7 +29,8 @@ After that, you can push [OK] button.
 
 Your logs are shown in main window.
 
-You can set filters through log decoration. You can choose decoration from [ComboBox](https://docs.oracle.com/javase/8/javafx/api/javafx/scene/control/ComboBox.html), and check on [CheckBox](https://docs.oracle.com/javase/8/javafx/api/javafx/scene/control/CheckBox.html).
+* You can set filters through log decoration. You can choose decoration from [ComboBox](https://docs.oracle.com/javase/8/javafx/api/javafx/scene/control/ComboBox.html), and check on [CheckBox](https://docs.oracle.com/javase/8/javafx/api/javafx/scene/control/CheckBox.html).
+* If you want to search logs with some keywords, you can search it through search window.
 
 #### Drawing chart
 
