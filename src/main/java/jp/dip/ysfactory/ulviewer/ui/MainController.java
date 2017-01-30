@@ -25,6 +25,7 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.concurrent.WorkerStateEvent;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -32,7 +33,6 @@ import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.CheckBoxListCell;
-import javafx.scene.input.KeyEvent;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -172,6 +172,18 @@ public class MainController implements Initializable{
     @FXML
     private Label notFoundLabel;
 
+    @FXML
+    private MenuItem chartMenu;
+
+    @FXML
+    private MenuItem tableMenu;
+
+    @FXML
+    private Button selectAllButton;
+
+    @FXML
+    private Button unselectAllButton;
+
     private Stage stage;
 
     private LogParseWizardController logParseWizardController;
@@ -197,6 +209,8 @@ public class MainController implements Initializable{
     private List<LogDecoration> decorations;
 
     private List<LogData> logs;
+
+    private BooleanProperty isUnloadedProperty;
 
     public void setStage(Stage stage){
         this.stage = stage;
@@ -238,6 +252,11 @@ public class MainController implements Initializable{
                       .addListener((v, o, n) -> Optional.ofNullable(n)
                                                         .ifPresent(d -> visibleList.getItems().setAll(d.valueProperty())));
         searchText.textProperty().addListener((v, o, n) -> onSearchTextChanged(n));
+        isUnloadedProperty = new SimpleBooleanProperty(true);
+        chartMenu.disableProperty().bind(isUnloadedProperty);
+        tableMenu.disableProperty().bind(isUnloadedProperty);
+        selectAllButton.disableProperty().bind(isUnloadedProperty);
+        unselectAllButton.disableProperty().bind(isUnloadedProperty);
     }
 
     private void showLog(){
@@ -280,7 +299,18 @@ public class MainController implements Initializable{
         }
 
         setDecoratorListener();
+        isUnloadedProperty.set(false);
         showLog();
+    }
+
+    private void onLogParseFailed(WorkerStateEvent event){
+        isUnloadedProperty.set(true);
+
+        Throwable t = event.getSource().getException();
+        if(t != null){
+            throw new RuntimeException(t);
+        }
+
     }
 
     @FXML
@@ -305,9 +335,10 @@ public class MainController implements Initializable{
                 return;
             }
 
+            isUnloadedProperty.set(true);
             LogParser parser = new LogParser(logList, decorations);
             parser.setOnSucceeded(e -> onLogParseSucceeded(parser));
-            parser.setOnFailed(e -> Optional.ofNullable(e.getSource().getException()).ifPresent(t -> { throw new RuntimeException(t); }));
+            parser.setOnFailed(this::onLogParseFailed);
             Thread th = new Thread(parser);
             th.start();
         }

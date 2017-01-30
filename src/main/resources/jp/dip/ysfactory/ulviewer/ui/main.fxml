@@ -47,7 +47,7 @@
               <MenuItem mnemonicParsing="false" text="Close" />
             </items>
           </Menu>
-            <Menu mnemonicParsing="false" text="Chart">
+            <Menu fx:id="chartMenu" mnemonicParsing="false" text="Chart">
               <items>
                   <Menu mnemonicParsing="false" text="Memory">
                     <items>
@@ -60,7 +60,7 @@
                   <MenuItem fx:id="vmOperationChart" mnemonicParsing="false" onAction="#onChartMenuClicked" text="VM Operations" />
               </items>
             </Menu>
-            <Menu mnemonicParsing="false" text="Table">
+            <Menu fx:id="tableMenu" mnemonicParsing="false" text="Table">
               <items>
                   <MenuItem fx:id="classLoad" mnemonicParsing="false" onAction="#onSamplingWindowMenuClicked" text="Class loading" />
                   <MenuItem fx:id="ageTable" mnemonicParsing="false" onAction="#onSamplingWindowMenuClicked" text="Age table" />
@@ -80,8 +80,8 @@
                   </HBox>
                   <ButtonBar prefHeight="40.0" prefWidth="200.0">
                     <buttons>
-                        <Button mnemonicParsing="false" onAction="#onSelectAllClick" text="Select All" />
-                      <Button mnemonicParsing="false" onAction="#onUnselectAllClick" text="Unselect All" />
+                        <Button fx:id="selectAllButton" mnemonicParsing="false" onAction="#onSelectAllClick" text="Select All" />
+                      <Button fx:id="unselectAllButton" mnemonicParsing="false" onAction="#onUnselectAllClick" text="Unselect All" />
                     </buttons>
                   </ButtonBar>
                   <ListView fx:id="visibleList" prefHeight="10000.0" prefWidth="10000.0" />
