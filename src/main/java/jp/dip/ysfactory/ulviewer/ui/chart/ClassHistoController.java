@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016 Yasumasa Suenaga
+ * Copyright (C) 2016-2017 Yasumasa Suenaga
  *
  * This file is part of UL Viewer.
  *
@@ -69,6 +69,9 @@ public class ClassHistoController implements Initializable {
     @FXML
     private TableColumn<ClassHistogram.HistoDataEntry, String> nameColumn;
 
+    @FXML
+    private Button showLogButton;
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         colorColumn.setCellValueFactory(new PropertyValueFactory<>("color"));
@@ -91,6 +94,8 @@ public class ClassHistoController implements Initializable {
 
         logCombo.getSelectionModel().selectedItemProperty().addListener((v, o, n) -> histoTable.getItems().setAll(n.getEntries()));
         logCombo.getSelectionModel().selectedItemProperty().addListener((v, o, n) -> drawChart(n.getEntries()));
+
+        showLogButton.disableProperty().bind(logCombo.getSelectionModel().selectedItemProperty().isNull());
     }
 
     @FXML

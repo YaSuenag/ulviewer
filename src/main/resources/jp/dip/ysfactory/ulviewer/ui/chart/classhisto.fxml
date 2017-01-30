@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <!--
-  Copyright (C) 2016 Yasumasa Suenaga
+  Copyright (C) 2016-2017 Yasumasa Suenaga
 
   This file is part of UL Viewer.
 
@@ -34,7 +34,7 @@
                 <HBox spacing="20.0">
                     <children>
                         <ComboBox fx:id="logCombo" prefWidth="150.0" />
-                        <Button mnemonicParsing="false" onAction="#onShowLogClicked" text="Show log" />
+                        <Button fx:id="showLogButton" mnemonicParsing="false" onAction="#onShowLogClicked" text="Show log" />
                     </children>
                 </HBox>
                 <SplitPane dividerPositions="0.29797979797979796" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" VBox.vgrow="ALWAYS">

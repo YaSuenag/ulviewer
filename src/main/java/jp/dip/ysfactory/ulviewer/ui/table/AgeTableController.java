@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016 Yasumasa Suenaga
+ * Copyright (C) 2016-2017 Yasumasa Suenaga
  *
  * This file is part of UL Viewer.
  *
@@ -56,6 +56,9 @@ public class AgeTableController implements Initializable {
     @FXML
     private TableColumn<Map.Entry<Integer, Long>, Long> bytesColumn;
 
+    @FXML
+    private Button showLogButton;
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         ageColumn.setCellValueFactory(new PropertyValueFactory<>("key"));
@@ -64,6 +67,7 @@ public class AgeTableController implements Initializable {
         logCombo.getSelectionModel().selectedItemProperty().addListener((v, o, n) -> ageTable.getItems().setAll(IntStream.range(0, AgeTable.MAX_AGE)
                                                                                                                             .mapToObj(i -> new AbstractMap.SimpleEntry<>(i + 1, n.getAgeValue()[i]))
                                                                                                                             .collect(Collectors.toList())));
+        showLogButton.disableProperty().bind(logCombo.getSelectionModel().selectedItemProperty().isNull());
     }
 
     @FXML
