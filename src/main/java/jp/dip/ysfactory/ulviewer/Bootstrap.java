@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016 Yasumasa Suenaga
+ * Copyright (C) 2016-2017 Yasumasa Suenaga
  *
  * This file is part of UL Viewer.
  *
@@ -48,30 +48,8 @@ public class Bootstrap extends Application{
         primaryStage.show();
     }
 
-    private static void showExceptionDialog(Throwable t){
-        String errStr;
-        try(StringWriter strWriter = new StringWriter();
-            PrintWriter printWriter = new PrintWriter(strWriter)){
-            t.printStackTrace(printWriter);
-            errStr = strWriter.toString();
-        }
-        catch(IOException e){
-                e.printStackTrace();
-                return;
-        }
-
-        TextArea details = new TextArea(errStr);
-        details.setEditable(false);
-
-        Alert dialog = new Alert(ERROR);
-        dialog.setTitle("Error");
-        dialog.setHeaderText(t.getLocalizedMessage());
-        dialog.getDialogPane().setExpandableContent(details);
-        dialog.showAndWait();
-    }
-
     public static void main(String[] args){
-        Thread.setDefaultUncaughtExceptionHandler((t, e) -> Platform.runLater(() -> showExceptionDialog(e)));
+        Thread.setDefaultUncaughtExceptionHandler((t, e) -> Platform.runLater(() -> ExceptionDialog.showExceptionDialog(e)));
         launch(args);
     }
 

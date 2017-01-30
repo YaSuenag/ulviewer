@@ -37,6 +37,7 @@ import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import jp.dip.ysfactory.ulviewer.ExceptionDialog;
 import jp.dip.ysfactory.ulviewer.logdata.LogData;
 import jp.dip.ysfactory.ulviewer.logdata.LogDecoration;
 import jp.dip.ysfactory.ulviewer.logdata.LogParser;
@@ -305,12 +306,7 @@ public class MainController implements Initializable{
 
     private void onLogParseFailed(WorkerStateEvent event){
         isUnloadedProperty.set(true);
-
-        Throwable t = event.getSource().getException();
-        if(t != null){
-            throw new RuntimeException(t);
-        }
-
+        Optional.ofNullable(event.getSource().getException()).ifPresent(ExceptionDialog::showExceptionDialog);
     }
 
     @FXML
