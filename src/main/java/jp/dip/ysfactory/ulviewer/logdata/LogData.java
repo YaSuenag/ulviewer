@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016 Yasumasa Suenaga
+ * Copyright (C) 2016-2017 Yasumasa Suenaga
  *
  * This file is part of UL Viewer.
  *
@@ -18,7 +18,6 @@
  */
 package jp.dip.ysfactory.ulviewer.logdata;
 
-import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeFormatterBuilder;
@@ -41,7 +40,7 @@ public class LogData {
 
     private ZonedDateTime time;
 
-    private LocalDateTime utcTime;
+    private ZonedDateTime utcTime;
 
     private double uptime;
 
@@ -95,7 +94,7 @@ public class LogData {
                     break;
 
                 case UTCTIME:
-                    utcTime = LocalDateTime.parse(decorationStr, LOG_DATETIME_FORMATTER);
+                    utcTime = ZonedDateTime.parse(decorationStr, LOG_DATETIME_FORMATTER);
                     break;
 
                 case UPTIME:
@@ -148,7 +147,7 @@ public class LogData {
         return time;
     }
 
-    public LocalDateTime getUtcTime() {
+    public ZonedDateTime getUtcTime() {
         return utcTime;
     }
 

@@ -1,4 +1,6 @@
 .idea/workspace.xml
 .idea/uiDesigner.xml
+.idea/kotlinc.xml
+.idea/libraries/
 
 target/

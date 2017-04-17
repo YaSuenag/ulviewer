@@ -43,6 +43,11 @@
           <Menu mnemonicParsing="false" text="File">
             <items>
                   <MenuItem mnemonicParsing="false" onAction="#onOpenClick" text="Open Log" />
+                  <Menu fx:id="pushLogMenu" disable="true" mnemonicParsing="false" text="Push logs">
+                    <items>
+                      <MenuItem mnemonicParsing="false" onAction="#onPushESClick" text="Elasticsearch" />
+                    </items>
+                  </Menu>
                   <SeparatorMenuItem mnemonicParsing="false" />
               <MenuItem mnemonicParsing="false" text="Close" />
             </items>

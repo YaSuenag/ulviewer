@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016 Yasumasa Suenaga
+ * Copyright (C) 2016-2017 Yasumasa Suenaga
  *
  * This file is part of UL Viewer.
  *
@@ -17,8 +17,6 @@
  * along with UL Viewer.  If not, see <http://www.gnu.org/licenses/>.
  */
 package jp.dip.ysfactory.ulviewer.logdata;
-
-import java.time.ZoneOffset;
 
 public class LogTimeValue {
 
@@ -61,7 +59,7 @@ public class LogTimeValue {
                 return new LogTimeValue(log.getTime().toInstant().toEpochMilli(), log.getTime().toString());
 
             case UTCTIME:
-                return new LogTimeValue(log.getUtcTime().toInstant(ZoneOffset.UTC).toEpochMilli(), log.getUtcTime().toString());
+                return new LogTimeValue(log.getUtcTime().toInstant().toEpochMilli(), log.getUtcTime().toString());
 
             case UPTIME:
                 return new LogTimeValue(log.getUptime(), log.getUptime() + "s");

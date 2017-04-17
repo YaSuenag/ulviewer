@@ -174,6 +174,9 @@ public class MainController implements Initializable{
     private Label notFoundLabel;
 
     @FXML
+    private MenuItem pushLogMenu;
+
+    @FXML
     private MenuItem chartMenu;
 
     @FXML
@@ -254,6 +257,7 @@ public class MainController implements Initializable{
                                                         .ifPresent(d -> visibleList.getItems().setAll(d.valueProperty())));
         searchText.textProperty().addListener((v, o, n) -> onSearchTextChanged(n));
         isUnloadedProperty = new SimpleBooleanProperty(true);
+        pushLogMenu.disableProperty().bind(isUnloadedProperty);
         chartMenu.disableProperty().bind(isUnloadedProperty);
         tableMenu.disableProperty().bind(isUnloadedProperty);
         selectAllButton.disableProperty().bind(isUnloadedProperty);
@@ -477,6 +481,27 @@ public class MainController implements Initializable{
             logArea.selectRange(index, index + keyword.length());
         }
 
+    }
+
+    @FXML
+    private void onPushESClick(ActionEvent actionEvent) {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("es-wizard.fxml"));
+
+        try {
+            loader.load();
+        } catch (IOException e) {
+            throw new UncheckedIOException(e);
+        }
+
+        ESController controller = loader.getController();
+        controller.setLogs(logs);
+
+        Stage window = new Stage(StageStyle.UNDECORATED);
+        window.initModality(Modality.APPLICATION_MODAL);
+        window.setResizable(false);
+        window.setTitle("Push logs to Elasticsearch");
+        window.setScene(new Scene(loader.getRoot()));
+        window.show();
     }
 
 }

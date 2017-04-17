@@ -92,6 +92,33 @@ In addition, you have to add `tags` (`tg`) to log tags.
 * You need to open `trace` level log (`gc+age=trace`).
 * You can check age table when GC is invoked.
 
+### Push log(s) to others
+
+#### Push to Elasticsearch
+
+You can push your log(s) to [Elasticsearch](https://www.elastic.co/products/elasticsearch).
+
+1. [File] -> [Push logs] -> [Elasticsearch]
+2. Set parameters:
+    * Host
+        * Hostname of Elasticsearch
+        * `localhost` is by default.
+    * Port
+        * HTTP port of Elasticsearch
+        * `9200` is by default.
+    * Timeout
+        * Timeout of HTTP access in ms
+        * `5000` is by default.
+    * Bulk count
+        * Number of logs per bulk request
+        * `1000` is by default.
+3. Push [OK] button
+
+You can use `kibana/export.json` to show your log(s) in [Kibana](https://www.elastic.co/products/kibana).
+You need to import this file in Management menu of Kibana.
+
+`export.json` provides one dashboards and four visualizes. They shows GC and Safepoint information.
+
 ## How to build
 
 You have to use JDK 8 and JavaFX 8.
