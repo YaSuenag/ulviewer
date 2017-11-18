@@ -18,14 +18,6 @@
  */
 package jp.dip.ysfactory.ulviewer.ui;
 
-import com.fasterxml.jackson.core.JsonFactory;
-import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.core.JsonToken;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializerProvider;
-import com.fasterxml.jackson.databind.module.SimpleModule;
-import com.fasterxml.jackson.databind.ser.std.StdSerializer;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
@@ -37,19 +29,23 @@ import javafx.stage.Stage;
 import jp.dip.ysfactory.ulviewer.ExceptionDialog;
 import jp.dip.ysfactory.ulviewer.logdata.LogData;
 import org.apache.http.HttpHost;
-import org.apache.http.entity.ContentType;
-import org.apache.http.nio.entity.NStringEntity;
-import org.elasticsearch.client.Response;
+import org.elasticsearch.action.bulk.BulkProcessor;
+import org.elasticsearch.action.bulk.BulkRequest;
+import org.elasticsearch.action.bulk.BulkResponse;
+import org.elasticsearch.action.index.IndexRequest;
 import org.elasticsearch.client.RestClient;
+import org.elasticsearch.client.RestHighLevelClient;
+import org.elasticsearch.common.settings.Settings;
+import org.elasticsearch.common.xcontent.XContentBuilder;
+import org.elasticsearch.common.xcontent.XContentFactory;
+import org.elasticsearch.node.Node;
+import org.elasticsearch.threadpool.ThreadPool;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.URL;
 import java.time.format.DateTimeFormatter;
-import java.util.Collections;
 import java.util.List;
 import java.util.ResourceBundle;
-import java.util.StringJoiner;
 
 
 public class ESController implements Initializable{
@@ -93,65 +89,71 @@ public class ESController implements Initializable{
         ((Stage)rootVBox.getScene().getWindow()).close();
     }
 
-    private static class LogDataSerializer extends StdSerializer<LogData> {
-
-        public LogDataSerializer(){
-            this(LogData.class);
+    private static XContentBuilder buildContent(LogData logData) throws IOException {
+        XContentBuilder builder = XContentFactory.jsonBuilder()
+                                                 .startObject();
+        if(logData.getTime() != null) {
+            builder = builder.field("time", DateTimeFormatter.ISO_OFFSET_DATE_TIME.format(logData.getTime()));
+        }
+        if(logData.getUtcTime() != null){
+            builder = builder.field("utcTime", DateTimeFormatter.ISO_OFFSET_DATE_TIME.format(logData.getUtcTime()));
+        }
+        if(logData.getUptime() != Double.NaN){
+            builder = builder.field("uptime", logData.getUptime());
+        }
+        if(logData.getTimeMillis() != -1){
+            builder = builder.field("timeMillis", logData.getTimeMillis());
+        }
+        if(logData.getUptimeMillis() != -1){
+            builder = builder.field("uptimeMillis", logData.getUptimeMillis());
+        }
+        if(logData.getTimeNanos() != -1){
+            builder = builder.field("timeNanos", logData.getTimeNanos());
+        }
+        if(logData.getUptimeNanos() != -1){
+            builder = builder.field("uptimeNanos", logData.getUptimeNanos());
+        }
+        if(!logData.getHostname().equals("<Unknown>")){
+            builder = builder.field("hostname", logData.getHostname());
+        }
+        if(logData.getPid() != -1){
+            builder = builder.field("pid", logData.getPid());
+        }
+        if(logData.getTid() != -1){
+            builder = builder.field("tid", logData.getTid());
         }
 
-        protected LogDataSerializer(Class<LogData> t) {
-            super(t);
+        builder = builder.field("level", logData.getLevel());
+
+        if(!logData.getTags().contains("<Unknown>")) {
+            builder = builder.field("tags", logData.getTags());
+        }
+
+        builder = builder.field("message", logData.getMessage());
+
+        return builder.endObject();
+    }
+
+    private static class BulkProcessorListener implements BulkProcessor.Listener{
+
+        @Override
+        public void beforeBulk(long executionId, BulkRequest bulkRequest) {
+            // Do nothing.
         }
 
         @Override
-        public void serialize(LogData logData, JsonGenerator jsonGenerator, SerializerProvider serializerProvider) throws IOException {
-            jsonGenerator.writeStartObject();
+        public void afterBulk(long executionId, BulkRequest bulkRequest, BulkResponse bulkResponse) {
+            // Do noting
+        }
 
-            if(logData.getTime() != null){
-                jsonGenerator.writeStringField("time", DateTimeFormatter.ISO_OFFSET_DATE_TIME.format(logData.getTime()));
-            }
-            if(logData.getUtcTime() != null){
-                jsonGenerator.writeStringField("utcTime", DateTimeFormatter.ISO_OFFSET_DATE_TIME.format(logData.getUtcTime()));
-            }
-            if(logData.getUptime() != Double.NaN){
-                jsonGenerator.writeNumberField("uptime", logData.getUptime());
-            }
-            if(logData.getTimeMillis() != -1){
-                jsonGenerator.writeNumberField("timeMillis", logData.getTimeMillis());
-            }
-            if(logData.getUptimeMillis() != -1){
-                jsonGenerator.writeNumberField("uptimeMillis", logData.getUptimeMillis());
-            }
-            if(logData.getTimeNanos() != -1){
-                jsonGenerator.writeNumberField("timeNanos", logData.getTimeNanos());
-            }
-            if(logData.getUptimeNanos() != -1){
-                jsonGenerator.writeNumberField("uptimeNanos", logData.getUptimeNanos());
-            }
-            if(!logData.getHostname().equals("<Unknown>")){
-                jsonGenerator.writeStringField("hostname", logData.getHostname());
-            }
-            if(logData.getPid() != -1){
-                jsonGenerator.writeNumberField("pid", logData.getPid());
-            }
-            if(logData.getTid() != -1){
-                jsonGenerator.writeNumberField("tid", logData.getTid());
-            }
-
-            jsonGenerator.writeObjectField("level", logData.getLevel());
-
-            if(!logData.getTags().contains("<Unknown>")) {
-                jsonGenerator.writeObjectField("tags", logData.getTags());
-            }
-
-            jsonGenerator.writeObjectField("message", logData.getMessage());
-
-            jsonGenerator.writeEndObject();
+        @Override
+        public void afterBulk(long executionId, BulkRequest bulkRequest, Throwable throwable) {
+            throw new RuntimeException(throwable);
         }
 
     }
 
-    private static class PushToESTask extends Task<Boolean> {
+    private static class PushToESTask extends Task<Void> {
 
         private final int timeout;
 
@@ -163,8 +165,6 @@ public class ESController implements Initializable{
 
         private final int bulkCount;
 
-        private final ObjectMapper mapper;
-
         private final Stage parentStage;
 
         public PushToESTask(int timeout, String hostName, int port, int bulkCount, List<LogData> logs, Stage parentStage) {
@@ -174,80 +174,51 @@ public class ESController implements Initializable{
             this.bulkCount = bulkCount;
             this.logs = logs;
             this.parentStage = parentStage;
-
-            SimpleModule module = new SimpleModule();
-            module.addSerializer(LogData.class, new LogDataSerializer());
-            this.mapper = new ObjectMapper();
-            mapper.registerModule(module);
         }
 
         @Override
-        protected Boolean call() throws Exception {
-            JsonFactory factory = new JsonFactory();
-            boolean succeeded = true;
+        protected Void call() throws Exception {
+            int performed = 0;
 
-            try(RestClient client = RestClient.builder(new HttpHost(hostName, port, "http"))
-                                               .setRequestConfigCallback(b -> b.setConnectTimeout(timeout).setSocketTimeout(timeout))
-                                               .setMaxRetryTimeoutMillis(timeout)
-                                               .build()){
-                LogData log = logs.get(0);
-                String endpoint = "/jvmul";
-                if(log.getTime() != null){
-                    endpoint += "-" + DateTimeFormatter.ISO_LOCAL_DATE.format(log.getTime());
-                }
-                else if(log.getUtcTime() != null){
-                    endpoint += "-" + DateTimeFormatter.ISO_LOCAL_DATE.format(log.getUtcTime());
-                }
-                endpoint += "/jvmul/_bulk";
+            try(RestHighLevelClient client = new RestHighLevelClient(RestClient.builder(new HttpHost(hostName, port, "http"))
+                                                                                .setRequestConfigCallback(b -> b.setConnectTimeout(timeout).setSocketTimeout(timeout))
+                                                                                .setMaxRetryTimeoutMillis(timeout));
+                BulkProcessor processor = (new BulkProcessor.Builder(client::bulkAsync, new BulkProcessorListener(), new ThreadPool(Settings.builder()
+                                                                                                                                             .put(Node.NODE_NAME_SETTING.getKey(), "high-level-client").build())))
+                                             .setBulkActions(bulkCount)
+                                             .build()){
 
-                for(int start = 0; start < logs.size(); start += bulkCount){
-                    StringJoiner contents = new StringJoiner("\n");
-                    int last = ((start + bulkCount) > logs.size()) ? logs.size() : start + bulkCount;
-
-                    for(LogData bulkData : logs.subList(start, last)){
-                        contents.add("{ \"index\" : {} }");
-                        contents.add(mapper.writeValueAsString(bulkData));
+                for(LogData log : logs){
+                    String index = "jvmul";
+                    if(log.getTime() != null){
+                        index += "-" + DateTimeFormatter.ISO_LOCAL_DATE.format(log.getTime());
+                    }
+                    else if(log.getUtcTime() != null){
+                        index += "-" + DateTimeFormatter.ISO_LOCAL_DATE.format(log.getUtcTime());
                     }
 
-                    Response response = client.performRequest("PUT", endpoint, Collections.emptyMap(), new NStringEntity(contents.toString(), ContentType.create("application/x-ndjson")));
-
-                    try(InputStream content = response.getEntity().getContent();
-                        JsonParser responseParser = factory.createParser(content);){
-                        while(responseParser.nextToken() != JsonToken.END_OBJECT){
-                            String objName = responseParser.getCurrentName();
-                            if((objName != null) && objName.equals("errors")){
-
-                                if(responseParser.getValueAsBoolean()){
-                                    succeeded = false;
-                                }
-
-                                break;
-                            }
-                        }
-                    }
-
-                    updateProgress(last - 1, logs.size());
-                    updateMessage(Integer.toString(last) + " / " + Integer.toString(logs.size()));
+                    processor.add(new IndexRequest(index, "jvmul").source(buildContent(log)));
+                    updateProgress(++performed, logs.size());
+                    updateMessage(Integer.toString(performed) + " / " + Integer.toString(logs.size()));
                 }
 
             }
 
-            return succeeded;
+            return null;
         }
 
         @Override
         protected void succeeded() {
-            Alert dialog = this.getValue() ? new Alert(Alert.AlertType.INFORMATION, "Finish", ButtonType.OK)
-                                            : new Alert(Alert.AlertType.WARNING, "Part of log(s) couldn't be pushed.", ButtonType.OK);
+            Alert dialog =new Alert(Alert.AlertType.INFORMATION, "Finish", ButtonType.OK);
 
-            Platform.runLater(() -> dialog.showAndWait());
-            Platform.runLater(() -> parentStage.close());
+            Platform.runLater(dialog::showAndWait);
+            Platform.runLater(parentStage::close);
         }
 
         @Override
         protected void failed() {
             ExceptionDialog.showExceptionDialog(this.getException());
-            Platform.runLater(() -> parentStage.close());
+            Platform.runLater(parentStage::close);
         }
 
     }
