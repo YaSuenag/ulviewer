@@ -114,10 +114,96 @@ You can push your log(s) to [Elasticsearch](https://www.elastic.co/products/elas
         * `1000` is by default.
 3. Push [OK] button
 
+#### Kibana support
+
 You can use `kibana/export.json` to show your log(s) in [Kibana](https://www.elastic.co/products/kibana).
 You need to import this file in Management menu of Kibana.
 
 `export.json` provides one dashboards and four visualizes. They shows GC and Safepoint information.
+Also you have to setup Elasticsearch and Kibana as below if you want to use sample dashboard.
+
+##### Sample dashboard requirements
+
+###### Enable regex on Painless Script
+
+You have to set `true` to `script.painless.regex.enabled` in `elasticsearch.yml` .
+
+###### Add Script Field to Kibana
+
+Sample dashboard uses some Script Fields which scrapes actual value. So you have to define them before you check it.
+
+####### GCTime
+
+| Type           | number       |
+| Format         | Duration     |
+| Input Format   | Milliseconds |
+| Output Format  | Milliseconds |
+| Decimal Places | 2            |
+
+```
+def msg = doc['message.keyword'].value;
+if(msg == null){
+  return null;
+}
+def m = /^.+ Pause .+ ([0-9]+\.[0-9]+)ms$/.matcher(msg);
+if(m.matches()){
+  return Float.parseFloat(m.group(1));
+}else{
+  return null;
+}
+```
+
+####### JavaHeapUsage
+
+| Type   | number |
+| Format | Bytes  |
+
+```
+def msg = doc['message.keyword'].value;
+if(msg == null){
+  return null;
+}
+def m = /^.+ Pause .+->([0-9]+)M.+$/.matcher(msg);
+if(m.matches()){
+  return Integer.parseInt(m.group(1)) * 1024 * 1024;
+}else{
+  return null;
+}
+```
+
+####### GCCause
+
+| Type | string |
+
+```
+def msg = doc['message.keyword'].value;
+if(msg == null){
+  return null;
+}
+def m = /^.+ Pause .+ \((.+)\)$/.matcher(msg);
+if(m.matches()){
+  return m.group(1);
+}else{
+  return null;
+}
+```
+
+####### Safepoint
+
+| Type | string |
+
+```
+def msg = doc['message.keyword'].value;
+if(msg == null){
+  return null;
+}
+def m = /^.+: (.+)$/.matcher(msg);
+if(m.matches()){
+  return m.group(1);
+}else{
+  return null;
+}
+```
 
 ## How to build
 
