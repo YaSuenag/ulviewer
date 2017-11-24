@@ -132,13 +132,18 @@ You have to set `true` to `script.painless.regex.enabled` in `elasticsearch.yml`
 
 Sample dashboard uses some Script Fields which scrapes actual value. So you have to define them before you check it.
 
-####### GCTime
-
-| Type           | number       |
-| Format         | Duration     |
-| Input Format   | Milliseconds |
-| Output Format  | Milliseconds |
-| Decimal Places | 2            |
+* GCTime
+    * Type
+        * number
+    * Format
+        * Duration
+    * Input Format
+        * Milliseconds
+    * Output Format
+        * Milliseconds
+    * Decimal Places
+        * 2
+    * Script
 
 ```
 def msg = doc['message.keyword'].value;
@@ -153,10 +158,12 @@ if(m.matches()){
 }
 ```
 
-####### JavaHeapUsage
-
-| Type   | number |
-| Format | Bytes  |
+* JavaHeapUsage
+    * Type
+        * number
+    * Format
+        * Bytes
+    * Script
 
 ```
 def msg = doc['message.keyword'].value;
@@ -171,9 +178,10 @@ if(m.matches()){
 }
 ```
 
-####### GCCause
-
-| Type | string |
+* GCCause
+    * Type
+        * string
+    * Script
 
 ```
 def msg = doc['message.keyword'].value;
@@ -188,9 +196,10 @@ if(m.matches()){
 }
 ```
 
-####### Safepoint
-
-| Type | string |
+* Safepoint
+    * Type
+        * string
+    * Script
 
 ```
 def msg = doc['message.keyword'].value;
