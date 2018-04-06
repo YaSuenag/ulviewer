@@ -35,11 +35,8 @@ import org.elasticsearch.action.bulk.BulkResponse;
 import org.elasticsearch.action.index.IndexRequest;
 import org.elasticsearch.client.RestClient;
 import org.elasticsearch.client.RestHighLevelClient;
-import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.common.xcontent.XContentBuilder;
 import org.elasticsearch.common.xcontent.XContentFactory;
-import org.elasticsearch.node.Node;
-import org.elasticsearch.threadpool.ThreadPool;
 
 import java.io.IOException;
 import java.net.URL;
@@ -134,26 +131,7 @@ public class ESController implements Initializable{
         return builder.endObject();
     }
 
-    private static class BulkProcessorListener implements BulkProcessor.Listener{
-
-        @Override
-        public void beforeBulk(long executionId, BulkRequest bulkRequest) {
-            // Do nothing.
-        }
-
-        @Override
-        public void afterBulk(long executionId, BulkRequest bulkRequest, BulkResponse bulkResponse) {
-            // Do noting
-        }
-
-        @Override
-        public void afterBulk(long executionId, BulkRequest bulkRequest, Throwable throwable) {
-            throw new RuntimeException(throwable);
-        }
-
-    }
-
-    private static class PushToESTask extends Task<Void> {
+    private static class PushToESTask extends Task<Void> implements BulkProcessor.Listener{
 
         private final int timeout;
 
@@ -177,16 +155,30 @@ public class ESController implements Initializable{
         }
 
         @Override
+        public void beforeBulk(long executionId, BulkRequest bulkRequest) {
+            // Do nothing.
+        }
+
+        @Override
+        public void afterBulk(long executionId, BulkRequest bulkRequest, BulkResponse bulkResponse) {
+            // Do noting
+        }
+
+        @Override
+        public void afterBulk(long executionId, BulkRequest bulkRequest, Throwable throwable) {
+            throw new RuntimeException(throwable);
+        }
+
+        @Override
         protected Void call() throws Exception {
             int performed = 0;
 
             try(RestHighLevelClient client = new RestHighLevelClient(RestClient.builder(new HttpHost(hostName, port, "http"))
                                                                                 .setRequestConfigCallback(b -> b.setConnectTimeout(timeout).setSocketTimeout(timeout))
                                                                                 .setMaxRetryTimeoutMillis(timeout));
-                BulkProcessor processor = (new BulkProcessor.Builder(client::bulkAsync, new BulkProcessorListener(), new ThreadPool(Settings.builder()
-                                                                                                                                             .put(Node.NODE_NAME_SETTING.getKey(), "high-level-client").build())))
-                                             .setBulkActions(bulkCount)
-                                             .build()){
+                BulkProcessor processor = BulkProcessor.builder(client::bulkAsync, this)
+                                                       .setBulkActions(bulkCount)
+                                                       .build()){
 
                 for(LogData log : logs){
                     String index = "jvmul";
