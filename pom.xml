@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <!--
-  Copyright (C) 2016-2017 Yasumasa Suenaga
+  Copyright (C) 2016-2019 Yasumasa Suenaga
 
   This file is part of UL Viewer.
 
@@ -41,7 +41,7 @@
         <dependency>
             <groupId>org.elasticsearch.client</groupId>
             <artifactId>elasticsearch-rest-high-level-client</artifactId>
-            <version>6.2.3</version>
+            <version>6.6.0</version>
         </dependency>
     </dependencies>
 
