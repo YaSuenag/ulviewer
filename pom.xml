@@ -33,15 +33,22 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <mainClass>jp.dip.ysfactory.ulviewer.Bootstrap</mainClass>
-        <maven.compiler.source>1.8</maven.compiler.source>
-        <maven.compiler.target>1.8</maven.compiler.target>
+        <maven.compiler.source>11</maven.compiler.source>
+        <maven.compiler.target>11</maven.compiler.target>
     </properties>
 
     <dependencies>
+<!--
         <dependency>
             <groupId>org.elasticsearch.client</groupId>
             <artifactId>elasticsearch-rest-high-level-client</artifactId>
             <version>6.6.0</version>
+        </dependency>
+-->
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-fxml</artifactId>
+            <version>11.0.2</version>
         </dependency>
     </dependencies>
 
@@ -50,11 +57,14 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.6.0</version>
+                <version>3.8.0</version>
                 <configuration>
                     <compilerArgs>
                         <arg>-Xlint:all</arg>
                     </compilerArgs>
+                    <excludes>
+                        <exclude>jp/dip/ysfactory/ulviewer/ui/ESController.java</exclude>
+                    </excludes>
                 </configuration>
             </plugin>
             <plugin>
@@ -69,7 +79,7 @@
                             <classpathPrefix>lib</classpathPrefix>
                         </manifest>
                         <manifestEntries>
-                            <JavaFX-Version>8.0.40+</JavaFX-Version>
+                            <JavaFX-Version>11</JavaFX-Version>
                             <JavaFX-Application-Class>${mainClass}</JavaFX-Application-Class>
                         </manifestEntries>
                     </archive>

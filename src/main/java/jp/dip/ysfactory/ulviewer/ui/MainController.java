@@ -257,7 +257,10 @@ public class MainController implements Initializable{
                                                         .ifPresent(d -> visibleList.getItems().setAll(d.valueProperty())));
         searchText.textProperty().addListener((v, o, n) -> onSearchTextChanged(n));
         isUnloadedProperty = new SimpleBooleanProperty(true);
-        pushLogMenu.disableProperty().bind(isUnloadedProperty);
+
+        //pushLogMenu.disableProperty().bind(isUnloadedProperty);
+        pushLogMenu.disableProperty().set(false);
+
         chartMenu.disableProperty().bind(isUnloadedProperty);
         tableMenu.disableProperty().bind(isUnloadedProperty);
         selectAllButton.disableProperty().bind(isUnloadedProperty);
@@ -485,6 +488,7 @@ public class MainController implements Initializable{
 
     @FXML
     private void onPushESClick(ActionEvent actionEvent) {
+/*
         FXMLLoader loader = new FXMLLoader(getClass().getResource("es-wizard.fxml"));
 
         try {
@@ -502,6 +506,7 @@ public class MainController implements Initializable{
         window.setTitle("Push logs to Elasticsearch");
         window.setScene(new Scene(loader.getRoot()));
         window.show();
+*/
     }
 
 }
