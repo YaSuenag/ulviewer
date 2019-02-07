@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016 Yasumasa Suenaga
+ * Copyright (C) 2016-2019 Yasumasa Suenaga
  *
  * This file is part of UL Viewer.
  *
@@ -66,6 +66,7 @@ public class MetaspaceChartViewer extends MemoryChartBase {
         usageLabel.setText(usage + " MB");
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public void draw() {
         NumberAxis xAxis = new NumberAxis();
@@ -80,7 +81,7 @@ public class MetaspaceChartViewer extends MemoryChartBase {
 
         XYChart.Series<Number, Long> capacitySeries = new XYChart.Series<>();
         XYChart.Series<Number, Long> usageSeries = new XYChart.Series<>();
-        AreaChart<Number, Long> chart = new AreaChart(xAxis, yAxis, FXCollections.observableArrayList(capacitySeries, usageSeries));
+        var chart = new AreaChart(xAxis, yAxis, FXCollections.observableArrayList(capacitySeries, usageSeries));
         chart.setAnimated(false);
         chart.setLegendVisible(false);
         chart.lookup(".series0").setStyle("-fx-fill: red; -fx-stroke: red;"); // capacity

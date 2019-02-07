@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016 Yasumasa Suenaga
+ * Copyright (C) 2016-2019 Yasumasa Suenaga
  *
  * This file is part of UL Viewer.
  *
@@ -53,6 +53,7 @@ public class PauseTimeChartViewer extends MemoryChartBase {
         tooltip.setText(xValStr + "\n" + text + "\n" + "GC ID: " + gcid);
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public void draw() {
         NumberAxis xAxis = new NumberAxis();
@@ -68,7 +69,7 @@ public class PauseTimeChartViewer extends MemoryChartBase {
         XYChart.Series<Number, Number> youngSeries = new XYChart.Series<>();
         XYChart.Series<Number, Number> concurrentSeries = new XYChart.Series<>();
         XYChart.Series<Number, Number> fullSeries = new XYChart.Series<>();
-        ScatterChart<Number, Number> chart = new ScatterChart<Number, Number>(xAxis, yAxis, FXCollections.observableArrayList(youngSeries, concurrentSeries, fullSeries));
+        var chart = new ScatterChart<Number, Number>(xAxis, yAxis, FXCollections.observableArrayList(youngSeries, concurrentSeries, fullSeries));
         chart.setAnimated(false);
         chart.setLegendVisible(false);
         Stage stage = super.createStage(chart, "Pause time");

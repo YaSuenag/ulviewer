@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016 Yasumasa Suenaga
+ * Copyright (C) 2016-2019 Yasumasa Suenaga
  *
  * This file is part of UL Viewer.
  *
@@ -93,6 +93,7 @@ public class VMOperationChartViewer extends ChartViewer {
 
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public void draw() {
         collectVmOpInfo();
@@ -107,7 +108,7 @@ public class VMOperationChartViewer extends ChartViewer {
         yAxis.setTickMarkVisible(false);
 
         XYChart.Series<Number, Number> series = new XYChart.Series<>();
-        ScatterChart<Number, Number> chart = new ScatterChart<Number, Number>(xAxis, yAxis, FXCollections.observableArrayList(series));
+        var chart = new ScatterChart<Number, Number>(xAxis, yAxis, FXCollections.observableArrayList(series));
         chart.setAnimated(false);
         chart.setLegendVisible(false);
         Stage stage = super.createStage(chart, "VM Operations");
