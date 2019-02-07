@@ -4,13 +4,13 @@ UL Viewer is log parser for [JEP 158: Unified JVM Logging](http://openjdk.java.n
 
 ## How to use
 
-You have to run `ulviewer-<version>.jar` on Java 8 or later.
+### Start application
 
-**You have to use JavaFX 8 runtime.** OracleJDK 8 includes it. However if you use OpenJDK, you need to use OpenJFX runtime.
-
+#### Linux x64
 
 ```
-$ java -jar ulviewer-<version>.jar
+$ cd ulviewer-<version>-Linux-amd64/bin
+$ ./ulviewer
 ```
 
 ### Open log(s)
