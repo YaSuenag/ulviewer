@@ -102,7 +102,7 @@
                             <executable>${java.home}/bin/jlink</executable>
                             <arguments>
                                 <argument>--module-path</argument>
-                                <argument>${java.home}/jmods:${project.build.directory}/dependency:${project.build.outputDirectory}</argument>
+                                <argument>${java.home}/jmods${path.separator}${project.build.directory}/dependency${path.separator}${project.build.outputDirectory}</argument>
                                 <argument>--add-modules</argument>
                                 <argument>ulviewer</argument>
                                 <argument>--launcher</argument>
