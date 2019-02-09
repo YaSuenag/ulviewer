@@ -23,7 +23,8 @@ module ulviewer {
 
     exports jp.dip.ysfactory.ulviewer to javafx.graphics;
 
-    opens jp.dip.ysfactory.ulviewer.ui to javafx.fxml;
+    opens jp.dip.ysfactory.ulviewer.ui to javafx.base, javafx.fxml;
     opens jp.dip.ysfactory.ulviewer.ui.chart to javafx.fxml;
     opens jp.dip.ysfactory.ulviewer.ui.table to javafx.fxml;
+    opens jp.dip.ysfactory.ulviewer.classhisto to javafx.base;
 }
