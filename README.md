@@ -13,6 +13,12 @@ $ cd ulviewer-<version>-Linux-amd64/bin
 $ ./ulviewer
 ```
 
+#### Windows x64
+
+* Run `ulviewer.bat`
+* If your machine has WSL (Windows Subsystem for Linux), you can run `ulviewer` directly.
+    * `ulviewer` is shell script.
+
 ### Open log(s)
 
 You can open several logs from [File] -> [Open Log] menu.
