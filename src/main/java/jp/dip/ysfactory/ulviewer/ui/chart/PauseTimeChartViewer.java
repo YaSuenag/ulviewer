@@ -18,7 +18,6 @@
  */
 package jp.dip.ysfactory.ulviewer.ui.chart;
 
-import javafx.collections.FXCollections;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.ScatterChart;
 import javafx.scene.chart.XYChart;
@@ -53,7 +52,6 @@ public class PauseTimeChartViewer extends MemoryChartBase {
         tooltip.setText(xValStr + "\n" + text + "\n" + "GC ID: " + gcid);
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     public void draw() {
         NumberAxis xAxis = new NumberAxis();
@@ -66,12 +64,15 @@ public class PauseTimeChartViewer extends MemoryChartBase {
         yAxis.setTickMarkVisible(false);
         yAxis.setLabel("ms");
 
-        XYChart.Series<Number, Number> youngSeries = new XYChart.Series<>();
-        XYChart.Series<Number, Number> concurrentSeries = new XYChart.Series<>();
-        XYChart.Series<Number, Number> fullSeries = new XYChart.Series<>();
-        var chart = new ScatterChart<Number, Number>(xAxis, yAxis, FXCollections.observableArrayList(youngSeries, concurrentSeries, fullSeries));
+        var youngSeries = new XYChart.Series<Number, Number>();
+        var concurrentSeries = new XYChart.Series<Number, Number>();
+        var fullSeries = new XYChart.Series<Number, Number>();
+        var chart = new ScatterChart<Number, Number>(xAxis, yAxis);
         chart.setAnimated(false);
         chart.setLegendVisible(false);
+        chart.getData().add(youngSeries);
+        chart.getData().add(concurrentSeries);
+        chart.getData().add(fullSeries);
         Stage stage = super.createStage(chart, "Pause time");
 
 

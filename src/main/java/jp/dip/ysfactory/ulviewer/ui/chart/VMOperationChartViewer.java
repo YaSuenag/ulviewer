@@ -93,7 +93,6 @@ public class VMOperationChartViewer extends ChartViewer {
 
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     public void draw() {
         collectVmOpInfo();
@@ -107,10 +106,11 @@ public class VMOperationChartViewer extends ChartViewer {
         yAxis.setMinorTickVisible(false);
         yAxis.setTickMarkVisible(false);
 
-        XYChart.Series<Number, Number> series = new XYChart.Series<>();
-        var chart = new ScatterChart<Number, Number>(xAxis, yAxis, FXCollections.observableArrayList(series));
+        var series = new XYChart.Series<Number, Number>();
+        var chart = new ScatterChart<Number, Number>(xAxis, yAxis);
         chart.setAnimated(false);
         chart.setLegendVisible(false);
+        chart.getData().add(series);
         Stage stage = super.createStage(chart, "VM Operations");
 
         for(Map.Entry<LogTimeValue, List<LogData>> entry : vmOpMap.entrySet()){

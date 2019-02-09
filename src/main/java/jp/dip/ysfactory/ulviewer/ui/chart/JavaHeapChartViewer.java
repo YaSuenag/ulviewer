@@ -18,7 +18,6 @@
  */
 package jp.dip.ysfactory.ulviewer.ui.chart;
 
-import javafx.collections.FXCollections;
 import javafx.scene.Node;
 import javafx.scene.chart.AreaChart;
 import javafx.scene.chart.NumberAxis;
@@ -66,7 +65,6 @@ public class JavaHeapChartViewer extends MemoryChartBase {
         usageLabel.setText(usage + " MB");
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     public void draw() {
         NumberAxis xAxis = new NumberAxis();
@@ -79,11 +77,13 @@ public class JavaHeapChartViewer extends MemoryChartBase {
         yAxis.setTickMarkVisible(false);
         yAxis.setLabel("MB");
 
-        XYChart.Series<Number, Long> capacitySeries = new XYChart.Series<>();
-        XYChart.Series<Number, Long> usageSeries = new XYChart.Series<>();
-        var chart = new AreaChart(xAxis, yAxis, FXCollections.observableArrayList(capacitySeries, usageSeries));
+        var capacitySeries = new XYChart.Series<Number, Number>();
+        var usageSeries = new XYChart.Series<Number, Number>();
+        var chart = new AreaChart<Number, Number>(xAxis, yAxis);
         chart.setAnimated(false);
         chart.setLegendVisible(false);
+        chart.getData().add(capacitySeries);
+        chart.getData().add(usageSeries);
         chart.lookup(".series0").setStyle("-fx-fill: red; -fx-stroke: red;"); // capacity
         chart.lookup(".series1").setStyle("-fx-fill: blue; -fx-stroke: blue;"); // usage
 
@@ -109,8 +109,8 @@ public class JavaHeapChartViewer extends MemoryChartBase {
             capacity = Long.parseLong(matcher.group(3));
             LogTimeValue logTimeValue = LogTimeValue.getLogTimeValue(log, super.chartWizardController.getTimeRange());
 
-            XYChart.Data<Number, Long> capacityData = new XYChart.Data<>(logTimeValue.getValue(), capacity);
-            XYChart.Data<Number, Long> usageData = new XYChart.Data<>(logTimeValue.getValue(), usage);
+            var capacityData = new XYChart.Data<Number, Number>(logTimeValue.getValue(), capacity);
+            var usageData = new XYChart.Data<Number, Number>(logTimeValue.getValue(), usage);
             capacitySeries.getData().add(capacityData);
             usageSeries.getData().add(usageData);
 
