@@ -113,7 +113,6 @@
                                 <argument>2</argument>
                                 <argument>--no-header-files</argument>
                                 <argument>--no-man-pages</argument>
-                                <argument>--strip-debug</argument>
                             </arguments>
                         </configuration>
                     </execution>
