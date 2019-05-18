@@ -26,7 +26,7 @@
 
     <groupId>jp.dip.ysfactory</groupId>
     <artifactId>ulviewer</artifactId>
-    <version>0.1.3-12</version>
+    <version>0.1.3-13</version>
     <packaging>jar</packaging>
     <name>UL Viewer</name>
 
