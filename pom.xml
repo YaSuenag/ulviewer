@@ -34,8 +34,8 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <mainClass>jp.dip.ysfactory.ulviewer.Bootstrap</mainClass>
         <imageName>${project.artifactId}-${project.version}</imageName>
-        <maven.compiler.source>13</maven.compiler.source>
-        <maven.compiler.target>13</maven.compiler.target>
+        <maven.compiler.source>14</maven.compiler.source>
+        <maven.compiler.target>14</maven.compiler.target>
     </properties>
 
     <dependencies>
@@ -49,7 +49,7 @@
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-fxml</artifactId>
-            <version>13-ea+7</version>
+            <version>14.0.1</version>
         </dependency>
     </dependencies>
 
