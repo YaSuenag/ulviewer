@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016-2017 Yasumasa Suenaga
+ * Copyright (C) 2016-2020 Yasumasa Suenaga
  *
  * This file is part of UL Viewer.
  *
@@ -144,7 +144,7 @@ public class MainController implements Initializable{
     private ListView<DecoratorSwitch> visibleList;
 
     @FXML
-    private TextArea logArea;
+    private ListView<LogData> logArea;
 
     @FXML
     private MenuItem javaHeapChart;
@@ -269,12 +269,12 @@ public class MainController implements Initializable{
 
     private void showLog(){
         notFoundLabel.setVisible(false);
-        logArea.setText(logs.stream()
-                              .filter(l -> decoratorBox.getItems()
-                                                         .stream()
-                                                         .allMatch(d -> d.doFilter(l)))
-                              .map(LogData::getMessage)
-                              .collect(Collectors.joining("\n")));
+        logArea.getItems().clear();
+        logs.stream()
+            .filter(l -> decoratorBox.getItems()
+                                     .stream()
+                                     .allMatch(d -> d.doFilter(l)))
+            .forEachOrdered(logArea.getItems()::add);
     }
 
     private ChangeListener<? super Boolean> enableSwitchListener = (v, o, n) -> showLog();
@@ -418,25 +418,26 @@ public class MainController implements Initializable{
     }
 
     private void onSearchTextChanged(String newSearchText) {
-        int startPos = Math.min(logArea.getAnchor(), logArea.getCaretPosition());
-
         if(newSearchText.isEmpty()){
-            logArea.positionCaret(startPos);
             notFoundLabel.setVisible(false);
         }
         else {
-            int index = logArea.getText().indexOf(newSearchText, startPos);
-
-            if (index == -1) {
-                logArea.positionCaret(startPos);
-                notFoundLabel.setVisible(true);
-            } else {
-                logArea.selectRange(index, index + newSearchText.length());
-                notFoundLabel.setVisible(false);
+            int startIdx = logArea.getSelectionModel().getSelectedIndex();
+            if(startIdx < 0){
+                startIdx = 0;
             }
 
+            boolean found = false;
+            for(int idx = startIdx; idx < logArea.getItems().size(); idx++){
+                if(logArea.getItems().get(idx).getMessage().indexOf(newSearchText) != -1){
+                    logArea.getSelectionModel().select(idx);
+                    logArea.scrollTo(idx);
+                    found = true;
+                    break;
+                }
+            }
+            notFoundLabel.setVisible(!found);
         }
-
     }
 
     @FXML
@@ -445,17 +446,23 @@ public class MainController implements Initializable{
 
         if(keyword.isEmpty()){
             notFoundLabel.setVisible(false);
-            return;
         }
+        else {
+            int startIdx = logArea.getSelectionModel().getSelectedIndex() + 1;
+            if(startIdx < 0){
+                startIdx = 0;
+            }
 
-        int index = logArea.getText().indexOf(keyword, Math.max(logArea.getAnchor(), logArea.getCaretPosition()));
-
-        if(index == -1){
-            notFoundLabel.setVisible(true);
-        }
-        else{
-            notFoundLabel.setVisible(false);
-            logArea.selectRange(index, index + keyword.length());
+            boolean found = false;
+            for(int idx = startIdx; idx < logArea.getItems().size(); idx++){
+                if(logArea.getItems().get(idx).getMessage().indexOf(keyword) != -1){
+                    logArea.getSelectionModel().select(idx);
+                    logArea.scrollTo(idx);
+                    found = true;
+                    break;
+                }
+            }
+            notFoundLabel.setVisible(!found);
         }
 
     }
@@ -463,25 +470,26 @@ public class MainController implements Initializable{
     @FXML
     private void onPreviousSearchClicked(ActionEvent actionEvent) {
         String keyword = searchText.getText();
-        int startPos = Math.min(logArea.getAnchor(), logArea.getCaretPosition()) - 1;
 
-        if (keyword.isEmpty()) {
+        if(keyword.isEmpty()){
             notFoundLabel.setVisible(false);
-            return;
         }
-        else if(startPos < keyword.length()){
-            notFoundLabel.setVisible(true);
-            return;
-        }
+        else {
+            int startIdx = logArea.getSelectionModel().getSelectedIndex() - 1;
+            if(startIdx < 0){
+                startIdx = logArea.getItems().size() - 1;
+            }
 
-        int index = logArea.getText().lastIndexOf(keyword, startPos);
-
-        if(index == -1) {
-            notFoundLabel.setVisible(true);
-        }
-        else{
-            notFoundLabel.setVisible(false);
-            logArea.selectRange(index, index + keyword.length());
+            boolean found = false;
+            for(int idx = startIdx; idx >= 0; idx--){
+                if(logArea.getItems().get(idx).getMessage().indexOf(keyword) != -1){
+                    logArea.getSelectionModel().select(idx);
+                    logArea.scrollTo(idx);
+                    found = true;
+                    break;
+                }
+            }
+            notFoundLabel.setVisible(!found);
         }
 
     }

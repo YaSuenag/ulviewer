@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016-2017 Yasumasa Suenaga
+ * Copyright (C) 2016-2020 Yasumasa Suenaga
  *
  * This file is part of UL Viewer.
  *
@@ -195,4 +195,8 @@ public class LogData {
         return message;
     }
 
+    @Override
+    public String toString() {
+        return message;
+    }
 }
