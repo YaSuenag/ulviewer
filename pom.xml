@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <!--
-  Copyright (C) 2016-2019 Yasumasa Suenaga
+  Copyright (C) 2016-2020 Yasumasa Suenaga
 
   This file is part of UL Viewer.
 
@@ -26,7 +26,7 @@
 
     <groupId>jp.dip.ysfactory</groupId>
     <artifactId>ulviewer</artifactId>
-    <version>0.1.3-13</version>
+    <version>0.1.4</version>
     <packaging>jar</packaging>
     <name>UL Viewer</name>
 
