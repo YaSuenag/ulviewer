@@ -105,7 +105,7 @@
                         <Label fx:id="notFoundLabel" text="Not found" visible="false" />
                      </children>
                   </HBox>
-                  <ListView fx:id="logArea" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" VBox.vgrow="ALWAYS"/>
+                  <ListView fx:id="logArea" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" VBox.vgrow="ALWAYS" onKeyPressed="#onListViewKeyPressed"/>
                </children>
             </VBox>
         </items>

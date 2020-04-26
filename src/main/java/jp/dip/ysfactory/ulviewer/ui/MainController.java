@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016-2020 Yasumasa Suenaga
+ * Copyright (C) 2016-2020   Yasumasa Suenaga
  *
  * This file is part of UL Viewer.
  *
@@ -33,6 +33,10 @@ import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.CheckBoxListCell;
+import javafx.scene.input.Clipboard;
+import javafx.scene.input.ClipboardContent;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -515,6 +519,15 @@ public class MainController implements Initializable{
         window.setScene(new Scene(loader.getRoot()));
         window.show();
 */
+    }
+
+    @FXML
+    private void onListViewKeyPressed(KeyEvent event) {
+        if(!logArea.getSelectionModel().isEmpty() && event.isControlDown() && (event.getCode() == KeyCode.C)){
+            var content = new ClipboardContent();
+            content.putString(logArea.getSelectionModel().getSelectedItem().getMessage());
+            Clipboard.getSystemClipboard().setContent(content);
+        }
     }
 
 }
