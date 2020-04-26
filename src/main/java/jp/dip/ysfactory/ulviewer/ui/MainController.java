@@ -137,7 +137,7 @@ public class MainController implements Initializable{
     private ListView<DecoratorSwitch> visibleList;
 
     @FXML
-    private ListView<LogData> logArea;
+    private ListView<LogData> logView;
 
     @FXML
     private MenuItem javaHeapChart;
@@ -262,12 +262,12 @@ public class MainController implements Initializable{
 
     private void showLog(){
         notFoundLabel.setVisible(false);
-        logArea.getItems().clear();
+        logView.getItems().clear();
         logs.stream()
             .filter(l -> decoratorBox.getItems()
                                      .stream()
                                      .allMatch(d -> d.doFilter(l)))
-            .forEachOrdered(logArea.getItems()::add);
+            .forEachOrdered(logView.getItems()::add);
     }
 
     private final ChangeListener<? super Boolean> enableSwitchListener = (v, o, n) -> showLog();
@@ -415,16 +415,16 @@ public class MainController implements Initializable{
             notFoundLabel.setVisible(false);
         }
         else {
-            int startIdx = logArea.getSelectionModel().getSelectedIndex();
+            int startIdx = logView.getSelectionModel().getSelectedIndex();
             if(startIdx < 0){
                 startIdx = 0;
             }
 
             boolean found = false;
-            for(int idx = startIdx; idx < logArea.getItems().size(); idx++){
-                if(logArea.getItems().get(idx).getMessage().contains(newSearchText)){
-                    logArea.getSelectionModel().select(idx);
-                    logArea.scrollTo(idx);
+            for(int idx = startIdx; idx < logView.getItems().size(); idx++){
+                if(logView.getItems().get(idx).getMessage().contains(newSearchText)){
+                    logView.getSelectionModel().select(idx);
+                    logView.scrollTo(idx);
                     found = true;
                     break;
                 }
@@ -441,16 +441,16 @@ public class MainController implements Initializable{
             notFoundLabel.setVisible(false);
         }
         else {
-            int startIdx = logArea.getSelectionModel().getSelectedIndex() + 1;
+            int startIdx = logView.getSelectionModel().getSelectedIndex() + 1;
             if(startIdx < 0){
                 startIdx = 0;
             }
 
             boolean found = false;
-            for(int idx = startIdx; idx < logArea.getItems().size(); idx++){
-                if(logArea.getItems().get(idx).getMessage().contains(keyword)){
-                    logArea.getSelectionModel().select(idx);
-                    logArea.scrollTo(idx);
+            for(int idx = startIdx; idx < logView.getItems().size(); idx++){
+                if(logView.getItems().get(idx).getMessage().contains(keyword)){
+                    logView.getSelectionModel().select(idx);
+                    logView.scrollTo(idx);
                     found = true;
                     break;
                 }
@@ -468,16 +468,16 @@ public class MainController implements Initializable{
             notFoundLabel.setVisible(false);
         }
         else {
-            int startIdx = logArea.getSelectionModel().getSelectedIndex() - 1;
+            int startIdx = logView.getSelectionModel().getSelectedIndex() - 1;
             if(startIdx < 0){
-                startIdx = logArea.getItems().size() - 1;
+                startIdx = logView.getItems().size() - 1;
             }
 
             boolean found = false;
             for(int idx = startIdx; idx >= 0; idx--){
-                if(logArea.getItems().get(idx).getMessage().contains(keyword)){
-                    logArea.getSelectionModel().select(idx);
-                    logArea.scrollTo(idx);
+                if(logView.getItems().get(idx).getMessage().contains(keyword)){
+                    logView.getSelectionModel().select(idx);
+                    logView.scrollTo(idx);
                     found = true;
                     break;
                 }
@@ -512,9 +512,9 @@ public class MainController implements Initializable{
 
     @FXML
     private void onListViewKeyPressed(KeyEvent event) {
-        if(!logArea.getSelectionModel().isEmpty() && event.isControlDown() && (event.getCode() == KeyCode.C)){
+        if(!logView.getSelectionModel().isEmpty() && event.isControlDown() && (event.getCode() == KeyCode.C)){
             var content = new ClipboardContent();
-            content.putString(logArea.getSelectionModel().getSelectedItem().getMessage());
+            content.putString(logView.getSelectionModel().getSelectedItem().getMessage());
             Clipboard.getSystemClipboard().setContent(content);
         }
     }
