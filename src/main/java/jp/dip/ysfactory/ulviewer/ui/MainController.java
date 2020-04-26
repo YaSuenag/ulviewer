@@ -103,35 +103,24 @@ public class MainController implements Initializable{
         }
 
         public boolean doFilter(LogData logData){
-            switch (decoration.get()){
-                case HOSTNAME:
-                    return value.stream()
-                                  .filter(s -> s.enableProperty().get())
-                                  .anyMatch(s -> s.categoryProperty().get().equals(logData.getHostname()));
-
-                case PID:
-                    return value.stream()
-                                  .filter(s -> s.enableProperty().get())
-                                  .anyMatch(s -> s.categoryProperty().get().equals(logData.getPid()));
-
-                case TID:
-                    return value.stream()
-                                  .filter(s -> s.enableProperty().get())
-                                  .anyMatch(s -> s.categoryProperty().get().equals(logData.getTid()));
-
-                case LEVEL:
-                    return value.stream()
-                                  .filter(s -> s.enableProperty().get())
-                                  .anyMatch(s -> s.categoryProperty().get().equals(logData.getLevel()));
-
-                case TAGS:
-                    return value.stream()
-                                  .filter(s -> s.enableProperty().get())
-                                  .anyMatch(s -> logData.getTags().contains(s.categoryProperty().get()));
-
-                default:
-                    return false;
-            }
+            return switch (decoration.get()) {
+                case HOSTNAME -> value.stream()
+                        .filter(s -> s.enableProperty().get())
+                        .anyMatch(s -> s.categoryProperty().get().equals(logData.getHostname()));
+                case PID -> value.stream()
+                        .filter(s -> s.enableProperty().get())
+                        .anyMatch(s -> s.categoryProperty().get().equals(logData.getPid()));
+                case TID -> value.stream()
+                        .filter(s -> s.enableProperty().get())
+                        .anyMatch(s -> s.categoryProperty().get().equals(logData.getTid()));
+                case LEVEL -> value.stream()
+                        .filter(s -> s.enableProperty().get())
+                        .anyMatch(s -> s.categoryProperty().get().equals(logData.getLevel()));
+                case TAGS -> value.stream()
+                        .filter(s -> s.enableProperty().get())
+                        .anyMatch(s -> logData.getTags().contains(s.categoryProperty().get()));
+                default -> false;
+            };
         }
 
         @Override
@@ -281,7 +270,7 @@ public class MainController implements Initializable{
             .forEachOrdered(logArea.getItems()::add);
     }
 
-    private ChangeListener<? super Boolean> enableSwitchListener = (v, o, n) -> showLog();
+    private final ChangeListener<? super Boolean> enableSwitchListener = (v, o, n) -> showLog();
 
     private void setDecoratorListener(){
         decoratorBox.getItems()
@@ -433,7 +422,7 @@ public class MainController implements Initializable{
 
             boolean found = false;
             for(int idx = startIdx; idx < logArea.getItems().size(); idx++){
-                if(logArea.getItems().get(idx).getMessage().indexOf(newSearchText) != -1){
+                if(logArea.getItems().get(idx).getMessage().contains(newSearchText)){
                     logArea.getSelectionModel().select(idx);
                     logArea.scrollTo(idx);
                     found = true;
@@ -459,7 +448,7 @@ public class MainController implements Initializable{
 
             boolean found = false;
             for(int idx = startIdx; idx < logArea.getItems().size(); idx++){
-                if(logArea.getItems().get(idx).getMessage().indexOf(keyword) != -1){
+                if(logArea.getItems().get(idx).getMessage().contains(keyword)){
                     logArea.getSelectionModel().select(idx);
                     logArea.scrollTo(idx);
                     found = true;
@@ -486,7 +475,7 @@ public class MainController implements Initializable{
 
             boolean found = false;
             for(int idx = startIdx; idx >= 0; idx--){
-                if(logArea.getItems().get(idx).getMessage().indexOf(keyword) != -1){
+                if(logArea.getItems().get(idx).getMessage().contains(keyword)){
                     logArea.getSelectionModel().select(idx);
                     logArea.scrollTo(idx);
                     found = true;

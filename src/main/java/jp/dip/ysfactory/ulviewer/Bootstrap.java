@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016-2017 Yasumasa Suenaga
+ * Copyright (C) 2016-2020 Yasumasa Suenaga
  *
  * This file is part of UL Viewer.
  *
@@ -23,16 +23,8 @@ import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.TextArea;
 import javafx.stage.Stage;
 import jp.dip.ysfactory.ulviewer.ui.MainController;
-
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.StringWriter;
-
-import static javafx.scene.control.Alert.AlertType.ERROR;
 
 public class Bootstrap extends Application{
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016 Yasumasa Suenaga
+ * Copyright (C) 2016-2020 Yasumasa Suenaga
  *
  * This file is part of UL Viewer.
  *
@@ -28,7 +28,6 @@ import jp.dip.ysfactory.ulviewer.logdata.LogData;
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
-import java.util.stream.Collectors;
 
 public class ClassLoadController implements Initializable{
 
@@ -72,7 +71,7 @@ public class ClassLoadController implements Initializable{
         loadColumn.setCellValueFactory(new PropertyValueFactory<>("loadLog"));
         unloadColumn.setCellValueFactory(new PropertyValueFactory<>("unloadLog"));
 
-        klassColumn.setCellFactory(p -> new TableCell<ClassLoad.ClassLoadLogEntry, Long>(){
+        klassColumn.setCellFactory(p -> new TableCell<>() {
             @Override
             protected void updateItem(Long item, boolean empty) {
                 super.updateItem(item, empty);
@@ -86,10 +85,7 @@ public class ClassLoadController implements Initializable{
 
     public void setLog(List<LogData> logs, int pid, String hostname){
         ClassLoad classload = ClassLoad.getClassLoad(logs, pid, hostname);
-        classTable.getItems().setAll(classload.getLoadClasses()
-                                                .values()
-                                                .stream()
-                                                .collect(Collectors.toList()));
+        classTable.getItems().setAll(classload.getLoadClasses().values());
     }
 
 }

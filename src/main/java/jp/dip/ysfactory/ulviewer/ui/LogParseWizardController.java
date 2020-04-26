@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016 Yasumasa Suenaga
+ * Copyright (C) 2016-2020 Yasumasa Suenaga
  *
  * This file is part of UL Viewer.
  *
@@ -49,8 +49,8 @@ public class LogParseWizardController implements Initializable {
     private static final Pattern DECORATION_PATTERN = Pattern.compile("\\[(.+?)\\]");
 
     public static class WizardTableValue{
-        private StringProperty logdata;
-        private ObjectProperty<LogDecoration> logDecoration;
+        private final StringProperty logdata;
+        private final ObjectProperty<LogDecoration> logDecoration;
 
         public WizardTableValue(String log, LogDecoration defaultDecoration){
             logdata = new SimpleStringProperty(log);
@@ -107,7 +107,7 @@ public class LogParseWizardController implements Initializable {
         }
     }
 
-    public boolean setLogLine(List<File> logFiles){
+    public void setLogLine(List<File> logFiles){
         decorations = null;
         Optional<String> line = logFiles.stream()
                                          .map(f -> this.getLogLine(f.toPath()))
@@ -115,8 +115,8 @@ public class LogParseWizardController implements Initializable {
                                          .map(Optional::get)
                                          .findAny();
 
-        if(!line.isPresent()){
-            return false;
+        if(line.isEmpty()){
+            return;
         }
 
         String log = line.get();
@@ -135,7 +135,7 @@ public class LogParseWizardController implements Initializable {
             else if(decoration.matches("^\\d+\\.\\d+s$")){
                 mappingTable.getItems().add(new WizardTableValue(decoration, LogDecoration.UPTIME));
             }
-            else if(Stream.of("trace", "debug", "info", "warning", "error").anyMatch(s -> s.equals(decoration))){
+            else if(List.of("trace", "debug", "info", "warning", "error").contains(decoration)){
                 mappingTable.getItems().add(new WizardTableValue(decoration, LogDecoration.LEVEL));
             }
             else{
@@ -148,7 +148,6 @@ public class LogParseWizardController implements Initializable {
 
         }
 
-        return true;
     }
 
     public List<LogDecoration> getDecorations(){

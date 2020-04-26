@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016-2019 Yasumasa Suenaga
+ * Copyright (C) 2016-2020 Yasumasa Suenaga
  *
  * This file is part of UL Viewer.
  *
@@ -18,7 +18,6 @@
  */
 package jp.dip.ysfactory.ulviewer.ui.chart;
 
-import javafx.collections.FXCollections;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.ScatterChart;
 import javafx.scene.chart.XYChart;
@@ -107,7 +106,7 @@ public class VMOperationChartViewer extends ChartViewer {
         yAxis.setTickMarkVisible(false);
 
         var series = new XYChart.Series<Number, Number>();
-        var chart = new ScatterChart<Number, Number>(xAxis, yAxis);
+        var chart = new ScatterChart<>(xAxis, yAxis);
         chart.setAnimated(false);
         chart.setLegendVisible(false);
         chart.getData().add(series);

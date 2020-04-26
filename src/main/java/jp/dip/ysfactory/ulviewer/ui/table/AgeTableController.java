@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016-2017 Yasumasa Suenaga
+ * Copyright (C) 2016-2020 Yasumasa Suenaga
  *
  * This file is part of UL Viewer.
  *
@@ -18,25 +18,24 @@
  */
 package jp.dip.ysfactory.ulviewer.ui.table;
 
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
-import javafx.scene.chart.PieChart;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import jp.dip.ysfactory.ulviewer.agetable.AgeTable;
-import jp.dip.ysfactory.ulviewer.classhisto.ClassHistogram;
 import jp.dip.ysfactory.ulviewer.logdata.LogData;
 
 import java.net.URL;
-import java.util.*;
+import java.util.AbstractMap;
+import java.util.List;
+import java.util.Map;
+import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 

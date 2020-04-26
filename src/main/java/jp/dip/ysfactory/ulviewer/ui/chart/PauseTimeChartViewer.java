@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016-2019 Yasumasa Suenaga
+ * Copyright (C) 2016-2020 Yasumasa Suenaga
  *
  * This file is part of UL Viewer.
  *
@@ -67,7 +67,7 @@ public class PauseTimeChartViewer extends MemoryChartBase {
         var youngSeries = new XYChart.Series<Number, Number>();
         var concurrentSeries = new XYChart.Series<Number, Number>();
         var fullSeries = new XYChart.Series<Number, Number>();
-        var chart = new ScatterChart<Number, Number>(xAxis, yAxis);
+        var chart = new ScatterChart<>(xAxis, yAxis);
         chart.setAnimated(false);
         chart.setLegendVisible(false);
         chart.getData().add(youngSeries);
