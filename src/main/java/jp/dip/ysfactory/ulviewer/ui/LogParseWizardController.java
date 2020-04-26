@@ -148,6 +148,13 @@ public class LogParseWizardController implements Initializable {
 
         }
 
+        if(!mappingTable.getItems().isEmpty()){
+            mappingTable.getItems()
+                        .get(mappingTable.getItems().size() - 1)
+                        .logDecorationProperty()
+                        .set(LogDecoration.TAGS);
+        }
+
     }
 
     public List<LogDecoration> getDecorations(){
