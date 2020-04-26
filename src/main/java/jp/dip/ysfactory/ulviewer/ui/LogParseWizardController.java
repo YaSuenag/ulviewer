@@ -109,6 +109,9 @@ public class LogParseWizardController implements Initializable {
 
     public void setLogLine(List<File> logFiles){
         decorations = null;
+        logLine.setText("");
+        mappingTable.getItems().clear();
+
         Optional<String> line = logFiles.stream()
                                          .map(f -> this.getLogLine(f.toPath()))
                                          .filter(Optional::isPresent)
@@ -122,7 +125,6 @@ public class LogParseWizardController implements Initializable {
         String log = line.get();
         logLine.setText(log);
         Matcher matcher = DECORATION_PATTERN.matcher(line.get());
-        mappingTable.getItems().clear();
         while(matcher.find()){
             String decoration = matcher.group(1);
 
