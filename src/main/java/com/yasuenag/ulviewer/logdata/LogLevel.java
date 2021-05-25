@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2019, 2021, Yasumasa Suenaga
+ * Copyright (C) 2016, 2021, Yasumasa Suenaga
  *
  * This file is part of UL Viewer.
  *
@@ -16,15 +16,20 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with UL Viewer.  If not, see <http://www.gnu.org/licenses/>.
  */
+package com.yasuenag.ulviewer.logdata;
 
-module ulviewer {
-    requires javafx.fxml;
-    requires javafx.controls;
+public enum LogLevel {
 
-    exports com.yasuenag.ulviewer to javafx.graphics;
+    unknown,
 
-    opens com.yasuenag.ulviewer.ui to javafx.base, javafx.fxml;
-    opens com.yasuenag.ulviewer.ui.chart to javafx.fxml;
-    opens com.yasuenag.ulviewer.ui.table to javafx.fxml;
-    opens com.yasuenag.ulviewer.classhisto to javafx.base;
+    trace,
+
+    debug,
+
+    info,
+
+    warning,
+
+    error
+
 }

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <!--
-  Copyright (C) 2016-2020 Yasumasa Suenaga
+  Copyright (C) 2016, 2021, Yasumasa Suenaga
 
   This file is part of UL Viewer.
 
@@ -24,15 +24,14 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>jp.dip.ysfactory</groupId>
+    <groupId>com.yasuenag</groupId>
     <artifactId>ulviewer</artifactId>
     <version>0.1.4</version>
-    <packaging>jar</packaging>
     <name>UL Viewer</name>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <mainClass>jp.dip.ysfactory.ulviewer.Bootstrap</mainClass>
+        <mainClass>com.yasuenag.ulviewer.Bootstrap</mainClass>
         <imageName>${project.artifactId}-${project.version}</imageName>
         <maven.compiler.source>14</maven.compiler.source>
         <maven.compiler.target>14</maven.compiler.target>
@@ -64,7 +63,7 @@
                         <arg>-Xlint:all</arg>
                     </compilerArgs>
                     <excludes>
-                        <exclude>jp/dip/ysfactory/ulviewer/ui/ESController.java</exclude>
+                        <exclude>com/yasuenag/ulviewer/ui/ESController.java</exclude>
                     </excludes>
                 </configuration>
             </plugin>
