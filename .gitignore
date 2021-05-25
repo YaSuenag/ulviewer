@@ -4,4 +4,6 @@
 .idea/jarRepositories.xml
 .idea/libraries/
 
+nb-configuration.xml
+
 target/
