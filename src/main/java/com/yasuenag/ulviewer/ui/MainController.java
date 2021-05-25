@@ -51,6 +51,7 @@ import com.yasuenag.ulviewer.ExceptionDialog;
 import com.yasuenag.ulviewer.logdata.LogData;
 import com.yasuenag.ulviewer.logdata.LogDecoration;
 import com.yasuenag.ulviewer.logdata.LogParser;
+import com.yasuenag.ulviewer.ui.chart.CodeCacheChartViewer;
 import com.yasuenag.ulviewer.ui.table.AgeTableController;
 import com.yasuenag.ulviewer.ui.table.ClassLoadController;
 
@@ -152,6 +153,9 @@ public class MainController implements Initializable{
 
     @FXML
     private MenuItem metaspaceChart;
+
+    @FXML
+    private MenuItem codecacheChart;
 
     @FXML
     private MenuItem vmOperationChart;
@@ -375,6 +379,9 @@ public class MainController implements Initializable{
         }
         else if(event.getSource().equals(metaspaceChart)){
             viewer = new MetaspaceChartViewer(logs, chartWizardController);
+        }
+        else if(event.getSource().equals(codecacheChart)){
+            viewer = new CodeCacheChartViewer(logs, chartWizardController);
         }
         else if(event.getSource().equals(vmOperationChart)){
             viewer = new VMOperationChartViewer(logs, chartWizardController);

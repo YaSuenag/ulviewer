@@ -73,6 +73,12 @@ In addition, you have to add `tags` (`tg`) to log tags.
 * You need to open `info` level log (`gc+metaspace=info`).
 * You can check Metaspace usage and capacity. This chart shows Metaspace GC event.
 
+##### CodeCache chart
+
+* [Chart] -> [Memory] -> [CodeCache]
+* You need to open `debug` level log (`compilation+codecache=debug`).
+* You can check CodeCache usage. This chart stacks CodeCache usage by segments (non-profiled nmethods, profiled nmethods, non-nmethods).
+
 ##### Class histogram
 
 * [Chart] -> [Memory] -> [Class histogram]
