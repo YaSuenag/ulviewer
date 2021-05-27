@@ -68,53 +68,24 @@
                 </configuration>
             </plugin>
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-jar-plugin</artifactId>
-                <version>3.0.2</version>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-dependency-plugin</artifactId>
-                <version>3.1.1</version>
+                <groupId>org.openjfx</groupId>
+                <artifactId>javafx-maven-plugin</artifactId>
+                <version>0.0.6</version>
+                <configuration>
+                    <mainClass>ulviewer/${mainClass}</mainClass>
+                    <launcher>ulviewer</launcher>
+                    <compress>2</compress>
+                    <noHeaderFiles>true</noHeaderFiles>
+                    <noManPages>true</noManPages>
+		    <jlinkImageName>${imageName}</jlinkImageName>
+                </configuration>
                 <executions>
                     <execution>
-                        <id>copy-dependencies</id>
+                        <id>javafx</id>
                         <phase>package</phase>
                         <goals>
-                            <goal>copy-dependencies</goal>
+                            <goal>jlink</goal>
                         </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>exec-maven-plugin</artifactId>
-                <version>1.5.0</version>
-                <executions>
-                    <execution>
-                        <id>jlink</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>exec</goal>
-                        </goals>
-                        <configuration>
-                            <executable>${java.home}/bin/jlink</executable>
-                            <arguments>
-                                <argument>--module-path</argument>
-                                <argument>${java.home}/jmods${path.separator}${project.build.directory}/dependency${path.separator}${project.build.outputDirectory}</argument>
-                                <argument>--add-modules</argument>
-                                <argument>ulviewer</argument>
-                                <argument>--launcher</argument>
-                                <argument>${project.artifactId}=ulviewer/${mainClass}</argument>
-                                <argument>--output</argument>
-                                <argument>${project.build.directory}/${imageName}</argument>
-                                <argument>--compress</argument>
-                                <argument>2</argument>
-                                <argument>--no-header-files</argument>
-                                <argument>--no-man-pages</argument>
-                                <argument>${jlink.argument}</argument>
-                            </arguments>
-                        </configuration>
                     </execution>
                 </executions>
             </plugin>
@@ -151,7 +122,6 @@
             </activation>
             <properties>
                 <package.os.name>linux</package.os.name>
-                <jlink.argument>--strip-native-debug-symbols=exclude-debuginfo-files</jlink.argument>
             </properties>
         </profile>
         <profile>
@@ -163,7 +133,6 @@
             </activation>
             <properties>
                 <package.os.name>windows</package.os.name>
-                <jlink.argument/>
             </properties>
         </profile>
     </profiles>
