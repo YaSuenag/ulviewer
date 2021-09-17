@@ -26,15 +26,15 @@
 
     <groupId>com.yasuenag</groupId>
     <artifactId>ulviewer</artifactId>
-    <version>0.1.4</version>
+    <version>0.2.0</version>
     <name>UL Viewer</name>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <mainClass>com.yasuenag.ulviewer.Bootstrap</mainClass>
         <imageName>${project.artifactId}-${project.version}</imageName>
-        <maven.compiler.source>14</maven.compiler.source>
-        <maven.compiler.target>14</maven.compiler.target>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
     </properties>
 
     <dependencies>
@@ -48,7 +48,7 @@
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-fxml</artifactId>
-            <version>14.0.1</version>
+            <version>17.0.0.1</version>
         </dependency>
     </dependencies>
 
@@ -70,7 +70,7 @@
             <plugin>
                 <groupId>org.openjfx</groupId>
                 <artifactId>javafx-maven-plugin</artifactId>
-                <version>0.0.6</version>
+                <version>0.0.7</version>
                 <configuration>
                     <mainClass>ulviewer/${mainClass}</mainClass>
                     <launcher>ulviewer</launcher>
