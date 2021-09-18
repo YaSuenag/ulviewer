@@ -107,7 +107,7 @@ In addition, you have to add `tags` (`tg`) to log tags.
 
 ## How to build
 
-You have to use JDK 11 or later.
+You have to use JDK 17 or later.
 
 ```
 $ mvn package
