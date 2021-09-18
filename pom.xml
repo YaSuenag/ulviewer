@@ -77,7 +77,8 @@
                     <compress>2</compress>
                     <noHeaderFiles>true</noHeaderFiles>
                     <noManPages>true</noManPages>
-		    <jlinkImageName>${imageName}</jlinkImageName>
+                    <jlinkImageName>${imageName}</jlinkImageName>
+                    <jlinkExecutable>${java.home}/bin/jlink${exec.suffix}</jlinkExecutable>
                 </configuration>
                 <executions>
                     <execution>
@@ -122,6 +123,7 @@
             </activation>
             <properties>
                 <package.os.name>linux</package.os.name>
+                <exec.suffix/>
             </properties>
         </profile>
         <profile>
@@ -133,6 +135,7 @@
             </activation>
             <properties>
                 <package.os.name>windows</package.os.name>
+                <exec.suffix>.exe</exec.suffix>
             </properties>
         </profile>
     </profiles>
