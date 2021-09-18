@@ -3,6 +3,10 @@
 .idea/kotlinc.xml
 .idea/jarRepositories.xml
 .idea/libraries/
+.idea/compiler.xml
+.idea/*.iml
+*.iml
+
 
 nb-configuration.xml
 
