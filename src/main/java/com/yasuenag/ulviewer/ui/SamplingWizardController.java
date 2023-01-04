@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016 Yasumasa Suenaga
+ * Copyright (C) 2016, 2023, Yasumasa Suenaga
  *
  * This file is part of UL Viewer.
  *
@@ -33,6 +33,7 @@ import com.yasuenag.ulviewer.logdata.LogDecoration;
 import java.net.URL;
 import java.util.List;
 import java.util.Optional;
+import java.util.OptionalInt;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
@@ -86,9 +87,10 @@ public class SamplingWizardController implements Initializable{
         return host.getValue();
     }
     
-    public int getPid(){
+    public OptionalInt getPid(){
         return Optional.ofNullable(pid.getValue())
-                        .orElse(-1);
+                       .map(OptionalInt::of)
+                       .orElse(OptionalInt.empty());
     }
 
     public boolean showDialog(List<MainController.DecoratorValue> values){

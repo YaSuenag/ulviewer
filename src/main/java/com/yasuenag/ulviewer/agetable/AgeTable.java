@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016, 2021, Yasumasa Suenaga
+ * Copyright (C) 2016, 2023, Yasumasa Suenaga
  *
  * This file is part of UL Viewer.
  *
@@ -24,6 +24,7 @@ import com.yasuenag.ulviewer.logdata.LogLevel;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.OptionalInt;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -67,11 +68,11 @@ public class AgeTable {
         return label;
     }
 
-    private static boolean shouldProcess(LogData log, int pid, String hostname){
+    private static boolean shouldProcess(LogData log, OptionalInt pid, String hostname){
         boolean notValid = (log.getLevel() != LogLevel.trace) ||
                             (log.getTags().size() != 2) ||
                             !(log.getTags().contains("gc") && log.getTags().contains("age")) ||
-                            (pid != log.getPid()) ||
+                            !pid.equals(log.getPid()) ||
                             !Optional.ofNullable(hostname)
                                      .map(h -> h.equals(log.getHostname()))
                                      .orElse(true);
@@ -79,7 +80,7 @@ public class AgeTable {
         return !notValid;
     }
 
-    public static List<AgeTable> getAgeTableList(List<LogData> logs, int pid, String hostname){
+    public static List<AgeTable> getAgeTableList(List<LogData> logs, OptionalInt pid, String hostname){
         List<AgeTable> result = new ArrayList<>();
         AgeTable current = null;
 

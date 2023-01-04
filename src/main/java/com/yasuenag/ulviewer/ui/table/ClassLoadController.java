@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016, 2021, Yasumasa Suenaga
+ * Copyright (C) 2016, 2023, Yasumasa Suenaga
  *
  * This file is part of UL Viewer.
  *
@@ -27,6 +27,7 @@ import com.yasuenag.ulviewer.logdata.LogData;
 
 import java.net.URL;
 import java.util.List;
+import java.util.OptionalInt;
 import java.util.ResourceBundle;
 
 public class ClassLoadController implements Initializable{
@@ -83,7 +84,7 @@ public class ClassLoadController implements Initializable{
         unloadColumn.setCellFactory(p -> new LogLabelCellFactory());
     }
 
-    public void setLog(List<LogData> logs, int pid, String hostname){
+    public void setLog(List<LogData> logs, OptionalInt pid, String hostname){
         ClassLoad classload = ClassLoad.getClassLoad(logs, pid, hostname);
         classTable.getItems().setAll(classload.getLoadClasses().values());
     }

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016, 2021, Yasumasa Suenaga
+ * Copyright (C) 2016, 2023, Yasumasa Suenaga
  *
  * This file is part of UL Viewer.
  *
@@ -52,7 +52,7 @@ public abstract class MemoryChartBase extends ChartViewer{
         gcId = -1;
         logBody = null;
         boolean notValid = !log.getTags().contains("gc") ||
-                           (super.chartWizardController.getPid() != log.getPid()) ||
+                           !super.chartWizardController.getPid().equals(log.getPid()) ||
                            !Optional.ofNullable(super.chartWizardController.getHost())
                                     .map(h -> h.equals(log.getHostname()))
                                     .orElse(true);

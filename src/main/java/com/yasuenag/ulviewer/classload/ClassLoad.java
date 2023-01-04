@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016, 2021, Yasumasa Suenaga
+ * Copyright (C) 2016, 2023, Yasumasa Suenaga
  *
  * This file is part of UL Viewer.
  *
@@ -80,9 +80,9 @@ public class ClassLoad {
         return loadClasses;
     }
 
-    private static boolean shouldProcess(LogData log, int pid, String hostname){
+    private static boolean shouldProcess(LogData log, OptionalInt pid, String hostname){
         boolean notValid = !(log.getTags().contains("class") && (log.getTags().contains("load") || log.getTags().contains("unload"))) ||
-                            (pid != log.getPid()) ||
+                            !pid.equals(log.getPid()) ||
                             !Optional.ofNullable(hostname)
                                      .map(h -> h.equals(log.getHostname()))
                                      .orElse(true);
@@ -90,7 +90,7 @@ public class ClassLoad {
         return !notValid;
     }
 
-    public static ClassLoad getClassLoad(List<LogData> logs, int pid, String hostname){
+    public static ClassLoad getClassLoad(List<LogData> logs, OptionalInt pid, String hostname){
         ClassLoad result = new ClassLoad();
 
         for(LogData log : logs){

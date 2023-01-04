@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016, 2021, Yasumasa Suenaga
+ * Copyright (C) 2016, 2023, Yasumasa Suenaga
  *
  * This file is part of UL Viewer.
  *
@@ -36,6 +36,7 @@ import com.yasuenag.ulviewer.logdata.LogData;
 
 import java.net.URL;
 import java.util.List;
+import java.util.OptionalInt;
 import java.util.ResourceBundle;
 import java.util.StringJoiner;
 
@@ -142,7 +143,7 @@ public class ClassHistoController implements Initializable {
         data.getNode().setStyle("-fx-pie-color: gray;");
     }
 
-    public void setLog(List<LogData> logs, int pid, String hostname){
+    public void setLog(List<LogData> logs, OptionalInt pid, String hostname){
         List<ClassHistogram> histoData = ClassHistogram.getClassHistogramList(logs, pid, hostname);
 
         histoData.forEach(h -> {

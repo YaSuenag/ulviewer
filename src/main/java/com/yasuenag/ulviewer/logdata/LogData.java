@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016, 2021, Yasumasa Suenaga
+ * Copyright (C) 2016, 2023, Yasumasa Suenaga
  *
  * This file is part of UL Viewer.
  *
@@ -24,6 +24,9 @@ import java.time.format.DateTimeFormatterBuilder;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.OptionalDouble;
+import java.util.OptionalInt;
+import java.util.OptionalLong;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -42,21 +45,21 @@ public class LogData {
 
     private ZonedDateTime utcTime;
 
-    private double uptime;
+    private OptionalDouble uptime;
 
-    private long timeMillis;
+    private OptionalLong timeMillis;
 
-    private long uptimeMillis;
+    private OptionalLong uptimeMillis;
 
-    private long timeNanos;
+    private OptionalLong timeNanos;
 
-    private long uptimeNanos;
+    private OptionalLong uptimeNanos;
 
     private String hostname;
 
-    private int pid;
+    private OptionalInt pid;
 
-    private int tid;
+    private OptionalInt tid;
 
     private LogLevel level;
 
@@ -67,14 +70,14 @@ public class LogData {
     public LogData(String logline, List<LogDecoration> decorations){
         time = null;
         utcTime = null;
-        uptime = Double.NaN;
-        timeMillis = -1;
-        uptimeMillis = -1;
-        timeNanos = -1;
-        uptimeNanos = -1;
+        uptime = OptionalDouble.empty();
+        timeMillis = OptionalLong.empty();
+        uptimeMillis = OptionalLong.empty();
+        timeNanos = OptionalLong.empty();
+        uptimeNanos = OptionalLong.empty();
         hostname = "<Unknown>";
-        pid = -1;
-        tid = -1;
+        pid = OptionalInt.empty();
+        tid = OptionalInt.empty();
         level = LogLevel.unknown;
         tags = Collections.singleton("<Unknown>");
         message = logline;
@@ -98,23 +101,33 @@ public class LogData {
                     break;
 
                 case UPTIME:
-                    uptime = Double.parseDouble(decorationStr.substring(0, decorationStr.length() - 1)); // Remove last 1 char ("s")
+                    uptime = OptionalDouble.of(Double.parseDouble(
+                                 decorationStr.substring(0, decorationStr.length() - 1) // Remove last 1 char ("s")
+                             ));
                     break;
 
                 case TIMEMILLIS:
-                    timeMillis = Long.parseLong(decorationStr.substring(0, decorationStr.length() - 2)); // Remove last 2 chars ("ms")
+                    timeMillis = OptionalLong.of(Long.parseLong(
+                                     decorationStr.substring(0, decorationStr.length() - 2) // Remove last 2 chars ("ms")
+                                 ));
                     break;
 
                 case UPTIMEMILLIS:
-                    uptimeMillis = Long.parseLong(decorationStr.substring(0, decorationStr.length() - 2)); // Remove last 2 chars ("ms")
+                    uptimeMillis = OptionalLong.of(Long.parseLong(
+                                       decorationStr.substring(0, decorationStr.length() - 2) // Remove last 2 chars ("ms")
+                                   ));
                     break;
 
                 case TIMENANOS:
-                    timeNanos = Long.parseLong(decorationStr.substring(0, decorationStr.length() - 2)); // Remove last 2 chars ("ns")
+                    timeNanos = OptionalLong.of(Long.parseLong(
+                                    decorationStr.substring(0, decorationStr.length() - 2) // Remove last 2 chars ("ns")
+                                ));
                     break;
 
                 case UPTIMENANOS:
-                    uptimeNanos = Long.parseLong(decorationStr.substring(0, decorationStr.length() - 2)); // Remove last 2 chars ("ns")
+                    uptimeNanos = OptionalLong.of(Long.parseLong(
+                                      decorationStr.substring(0, decorationStr.length() - 2) // Remove last 2 chars ("ns")
+                                  ));
                     break;
 
                 case HOSTNAME:
@@ -122,11 +135,11 @@ public class LogData {
                     break;
 
                 case PID:
-                    pid = Integer.parseInt(decorationStr);
+                    pid = OptionalInt.of(Integer.parseInt(decorationStr));
                     break;
 
                 case TID:
-                    tid = Integer.parseInt(decorationStr);
+                    tid = OptionalInt.of(Integer.parseInt(decorationStr));
                     break;
 
                 case LEVEL:
@@ -151,23 +164,23 @@ public class LogData {
         return utcTime;
     }
 
-    public double getUptime() {
+    public OptionalDouble getUptime() {
         return uptime;
     }
 
-    public long getTimeMillis() {
+    public OptionalLong getTimeMillis() {
         return timeMillis;
     }
 
-    public long getUptimeMillis() {
+    public OptionalLong getUptimeMillis() {
         return uptimeMillis;
     }
 
-    public long getTimeNanos() {
+    public OptionalLong getTimeNanos() {
         return timeNanos;
     }
 
-    public long getUptimeNanos() {
+    public OptionalLong getUptimeNanos() {
         return uptimeNanos;
     }
 
@@ -175,11 +188,11 @@ public class LogData {
         return hostname;
     }
 
-    public int getPid() {
+    public OptionalInt getPid() {
         return pid;
     }
 
-    public int getTid() {
+    public OptionalInt getTid() {
         return tid;
     }
 

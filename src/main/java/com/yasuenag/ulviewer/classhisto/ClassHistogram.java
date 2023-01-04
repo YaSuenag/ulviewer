@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016, 2021, Yasumasa Suenaga
+ * Copyright (C) 2016, 2023, Yasumasa Suenaga
  *
  * This file is part of UL Viewer.
  *
@@ -24,6 +24,7 @@ import com.yasuenag.ulviewer.logdata.LogData;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.OptionalInt;
 import java.util.StringJoiner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -111,9 +112,9 @@ public class ClassHistogram {
         return label;
     }
 
-    private static boolean shouldProcess(LogData log, int pid, String hostname){
+    private static boolean shouldProcess(LogData log, OptionalInt pid, String hostname){
         boolean notValid = !(log.getTags().contains("gc") && log.getTags().contains("classhisto")) ||
-                            (pid != log.getPid()) ||
+                            !pid.equals(log.getPid()) ||
                             !Optional.ofNullable(hostname)
                                      .map(h -> h.equals(log.getHostname()))
                                      .orElse(true);
@@ -121,7 +122,7 @@ public class ClassHistogram {
         return !notValid;
     }
 
-    public static List<ClassHistogram> getClassHistogramList(List<LogData> logs, int pid, String hostname){
+    public static List<ClassHistogram> getClassHistogramList(List<LogData> logs, OptionalInt pid, String hostname){
         List<ClassHistogram> result = new ArrayList<>();
         ClassHistogram current = null;
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016, 2021, Yasumasa Suenaga
+ * Copyright (C) 2016, 2023, Yasumasa Suenaga
  *
  * This file is part of UL Viewer.
  *
@@ -62,19 +62,24 @@ public class LogTimeValue {
                 return new LogTimeValue(log.getUtcTime().toInstant().toEpochMilli(), log.getUtcTime().toString());
 
             case UPTIME:
-                return new LogTimeValue(log.getUptime(), log.getUptime() + "s");
+                double uptime = log.getUptime().getAsDouble();
+                return new LogTimeValue(uptime, uptime + "s");
 
             case TIMEMILLIS:
-                return new LogTimeValue(log.getTimeMillis(), log.getTimeMillis() + "ms");
+                long timeMillis = log.getTimeMillis().getAsLong();
+                return new LogTimeValue(timeMillis, timeMillis + "ms");
 
             case UPTIMEMILLIS:
-                return new LogTimeValue(log.getUptimeMillis(), log.getUptimeMillis() + "ms");
+                long uptimeMillis = log.getUptimeMillis().getAsLong();
+                return new LogTimeValue(uptimeMillis, uptimeMillis + "ms");
 
             case TIMENANOS:
-                return new LogTimeValue(log.getTimeNanos(), log.getTimeNanos() + "ns");
+                long timeNanos = log.getTimeNanos().getAsLong();
+                return new LogTimeValue(timeNanos, timeNanos + "ns");
 
             case UPTIMENANOS:
-                return new LogTimeValue(log.getUptimeNanos(), log.getUptimeNanos() + "ns");
+                long uptimeNanos = log.getUptimeNanos().getAsLong();
+                return new LogTimeValue(uptimeNanos, uptimeNanos + "ns");
 
             default:
                 throw new RuntimeException("Unexpected time range");
