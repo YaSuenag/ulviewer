@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016, 2021, Yasumasa Suenaga
+ * Copyright (C) 2016, 2023, Yasumasa Suenaga
  *
  * This file is part of UL Viewer.
  *
@@ -44,9 +44,9 @@ import java.util.stream.Stream;
 
 public class LogParseWizardController implements Initializable {
 
-    private static final Pattern DECORATION_LINE_PATTERN = Pattern.compile("^((\\[.+?\\])+)\\s.+");
+    private static final Pattern DECORATION_LINE_PATTERN = Pattern.compile("^((\\[[^\\]]+?\\])+)\\s.+");
 
-    private static final Pattern DECORATION_PATTERN = Pattern.compile("\\[(.+?)\\]");
+    private static final Pattern DECORATION_PATTERN = Pattern.compile("\\[([^\\]]+?)\\]");
 
     public static class WizardTableValue{
         private final StringProperty logdata;
