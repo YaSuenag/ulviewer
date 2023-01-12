@@ -28,6 +28,7 @@ import com.yasuenag.ulviewer.ui.MainController;
 
 public class Bootstrap extends Application{
 
+    @Override
     public void start(Stage primaryStage) throws Exception {
         primaryStage.setTitle("UL Viewer");
 

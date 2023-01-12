@@ -84,6 +84,7 @@ public class LogParseWizardController implements Initializable {
 
     private List<LogDecoration> decorations;
 
+    @Override
     public void initialize(URL location, ResourceBundle resources) {
         decorations = null;
         fieldColumn.setCellValueFactory(new PropertyValueFactory<>("logdata"));

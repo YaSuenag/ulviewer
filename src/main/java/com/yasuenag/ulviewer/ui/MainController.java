@@ -222,6 +222,7 @@ public class MainController implements Initializable{
         this.stage = stage;
     }
 
+    @Override
     public void initialize(URL location, ResourceBundle resources) {
         FXMLLoader logParseWizardLoader = new FXMLLoader(MainController.class.getResource("logparse-wizard.fxml"));
         FXMLLoader chartWizardLoader = new FXMLLoader(MainController.class.getResource("chart-wizard.fxml"));
