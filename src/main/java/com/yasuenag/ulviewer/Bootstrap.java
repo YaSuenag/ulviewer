@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016, 2021, Yasumasa Suenaga
+ * Copyright (C) 2016, 2023, Yasumasa Suenaga
  *
  * This file is part of UL Viewer.
  *
@@ -31,7 +31,7 @@ public class Bootstrap extends Application{
     public void start(Stage primaryStage) throws Exception {
         primaryStage.setTitle("UL Viewer");
 
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("ui/main.fxml"));
+        FXMLLoader loader = new FXMLLoader(Bootstrap.class.getResource("ui/main.fxml"));
         Parent root = loader.load();
         Scene scene = new Scene(root);
         ((MainController)loader.getController()).setStage(primaryStage);
