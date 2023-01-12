@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016, 2021, Yasumasa Suenaga
+ * Copyright (C) 2016, 2023, Yasumasa Suenaga
  *
  * This file is part of UL Viewer.
  *
@@ -139,6 +139,9 @@ public class LogData {
                                   .map(String::intern)
                                   .collect(Collectors.toSet());
                     break;
+
+                default:
+                    throw new IllegalStateException("Unknown decoration");
             }
         }
     }
