@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016, 2021, Yasumasa Suenaga
+ * Copyright (C) 2016, 2023, Yasumasa Suenaga
  *
  * This file is part of UL Viewer.
  *
@@ -28,7 +28,7 @@ import java.util.regex.Pattern;
 
 public abstract class MemoryChartBase extends ChartViewer{
 
-    private static final Pattern GC_EVENT_PATTERN = Pattern.compile("^(\\[.+?\\])+ GC\\((\\d+)\\) (.+)$");
+    private static final Pattern GC_EVENT_PATTERN = Pattern.compile("^(\\[[^\\]]+?\\])+ GC\\((\\d+)\\) (.+)$");
 
     protected final Map<Long, List<LogData>> gcEventList;
 

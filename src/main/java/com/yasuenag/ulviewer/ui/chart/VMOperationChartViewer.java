@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016, 2021, Yasumasa Suenaga
+ * Copyright (C) 2016, 2023, Yasumasa Suenaga
  *
  * This file is part of UL Viewer.
  *
@@ -37,9 +37,9 @@ import java.util.regex.Pattern;
 
 public class VMOperationChartViewer extends ChartViewer {
 
-    private static final Pattern VMOP_START_PATTERN = Pattern.compile("^(\\[.+?\\])+ begin.+?: (.+?),.+$");
+    private static final Pattern VMOP_START_PATTERN = Pattern.compile("^(\\[[^\\]]+?\\])+ begin.+?: (.+?),.+$");
 
-    private static final Pattern VMOP_END_PATTERN = Pattern.compile("^(\\[.+?\\])+ end VM_Operation .+$");
+    private static final Pattern VMOP_END_PATTERN = Pattern.compile("^(\\[[^\\]]+?\\])+ end VM_Operation .+$");
 
     private final Tooltip tooltip;
 

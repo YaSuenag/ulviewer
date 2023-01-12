@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016, 2021, Yasumasa Suenaga
+ * Copyright (C) 2016, 2023, Yasumasa Suenaga
  *
  * This file is part of UL Viewer.
  *
@@ -85,7 +85,7 @@ public class ClassHistogram {
 
     private static final Pattern HEADER_PATTERN = Pattern.compile("^.+?Class Histogram \\((.+)\\)$");
 
-    private static final Pattern CLASSHISTO_PATTERN = Pattern.compile("^(\\[.+?\\])+ GC\\((\\d+)\\)\\s+(\\d+):\\s+(\\d+)\\s+(\\d+)\\s+(.+)$");
+    private static final Pattern CLASSHISTO_PATTERN = Pattern.compile("^(\\[[^\\]]+?\\])+ GC\\((\\d+)\\)\\s+(\\d+):\\s+(\\d+)\\s+(\\d+)\\s+(.+)$");
 
     private final List<HistoDataEntry> entries;
 

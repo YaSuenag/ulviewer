@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016, 2021, Yasumasa Suenaga
+ * Copyright (C) 2016, 2023, Yasumasa Suenaga
  *
  * This file is part of UL Viewer.
  *
@@ -31,9 +31,9 @@ public class AgeTable {
 
     public static int MAX_AGE = 15;
 
-    private static final Pattern GCID_PATTERN = Pattern.compile("^(\\[.+?\\])+ (GC\\(\\d+\\)).+$");
+    private static final Pattern GCID_PATTERN = Pattern.compile("^(\\[[^\\]]+?\\])+ (GC\\(\\d+\\)).+$");
 
-    private static final Pattern AGE_PATTERN = Pattern.compile("^(\\[.+?\\])+ GC\\(\\d+\\) - age\\s+(\\d+):\\s+(\\d+) bytes.+$");
+    private static final Pattern AGE_PATTERN = Pattern.compile("^(\\[[^\\]]+?\\])+ GC\\(\\d+\\) - age\\s+(\\d+):\\s+(\\d+) bytes.+$");
 
     private String label;
 

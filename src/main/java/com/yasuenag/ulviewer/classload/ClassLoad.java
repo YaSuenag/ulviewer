@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016, 2021, Yasumasa Suenaga
+ * Copyright (C) 2016, 2023, Yasumasa Suenaga
  *
  * This file is part of UL Viewer.
  *
@@ -27,9 +27,9 @@ import java.util.regex.Pattern;
 
 public class ClassLoad {
 
-    private static final Pattern LOAD_PATTERN = Pattern.compile("^(\\[.+?\\])+ (\\S+) source: \\S+ klass: (0x[0-9a-f]+) .+$");
+    private static final Pattern LOAD_PATTERN = Pattern.compile("^(\\[[^\\]]+?\\])+ (\\S+) source: \\S+ klass: (0x[0-9a-f]+) .+$");
 
-    private static final Pattern UNLOAD_PATTERN = Pattern.compile("^(\\[.+?\\])+ unloading class (\\S+) (0x[0-9a-f]+)$");
+    private static final Pattern UNLOAD_PATTERN = Pattern.compile("^(\\[[^\\]]+?\\])+ unloading class (\\S+) (0x[0-9a-f]+)$");
 
     public static class ClassLoadLogEntry{
 
