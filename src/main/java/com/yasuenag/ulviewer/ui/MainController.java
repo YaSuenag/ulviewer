@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016, 2021, Yasumasa Suenaga
+ * Copyright (C) 2016, 2023, Yasumasa Suenaga
  *
  * This file is part of UL Viewer.
  *
@@ -223,12 +223,12 @@ public class MainController implements Initializable{
     }
 
     public void initialize(URL location, ResourceBundle resources) {
-        FXMLLoader logParseWizardLoader = new FXMLLoader(getClass().getResource("logparse-wizard.fxml"));
-        FXMLLoader chartWizardLoader = new FXMLLoader(getClass().getResource("chart-wizard.fxml"));
-        FXMLLoader samplingWizardLoader = new FXMLLoader(getClass().getResource("sampling-wizard.fxml"));
-        FXMLLoader classHistoLoader = new FXMLLoader(getClass().getResource("chart/classhisto.fxml"));
-        FXMLLoader classLoadLoader = new FXMLLoader(getClass().getResource("table/classload.fxml"));
-        FXMLLoader ageTableLoader = new FXMLLoader(getClass().getResource("table/agetable.fxml"));
+        FXMLLoader logParseWizardLoader = new FXMLLoader(MainController.class.getResource("logparse-wizard.fxml"));
+        FXMLLoader chartWizardLoader = new FXMLLoader(MainController.class.getResource("chart-wizard.fxml"));
+        FXMLLoader samplingWizardLoader = new FXMLLoader(MainController.class.getResource("sampling-wizard.fxml"));
+        FXMLLoader classHistoLoader = new FXMLLoader(MainController.class.getResource("chart/classhisto.fxml"));
+        FXMLLoader classLoadLoader = new FXMLLoader(MainController.class.getResource("table/classload.fxml"));
+        FXMLLoader ageTableLoader = new FXMLLoader(MainController.class.getResource("table/agetable.fxml"));
 
         try{
             logParseWizardLoader.load();
