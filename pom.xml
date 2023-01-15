@@ -142,7 +142,7 @@
             <id>Mac</id>
             <activation>
                 <os>
-                    <family>windows</family>
+                    <family>mac</family>
                 </os>
             </activation>
             <properties>
