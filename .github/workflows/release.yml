@@ -1,0 +1,44 @@
+name: Upload assets
+
+on:
+  release:
+    type: [ created ]
+
+jobs:
+  publish:
+    strategy:
+      matrix:
+        os: [ ubuntu-latest, windows-latest, macos-latest ]
+
+    runs-on: ${{ matrix.os }}
+
+    name: Publish UL Viewer for ${{ matrix.os }}
+
+    steps:
+      - name: 'Checkout repository'
+        uses: actions/checkout@v3
+
+      - name: 'Setup Java'
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+          cache: 'maven'
+
+      - name: 'Run Maven'
+        run: mvn -B package
+
+      - name: 'Setup environment variables for release'
+        run: |
+          TAG=$(echo ${{ github.ref }} | cut -d '/' -f 3)
+          ASSET=$(find target/ -name 'ulviewer*.zip')
+          echo "TAG=$TAG" >> $GITHUB_ENV
+          echo "ASSET=$ASSET" >> $GITHUB_ENV
+        shell: bash
+
+      - name: 'Upload Release Asset'
+        uses: AButler/upload-release-assets@v2.0
+        with:
+          release-tag: ${{ env.TAG }}
+          files: ${{ env.ASSET }}
+          repo-token: ${{ github.token }}
