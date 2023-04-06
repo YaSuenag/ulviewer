@@ -4,6 +4,10 @@ on:
   release:
     type: [ published ]
 
+concurrency:
+  group: publish
+  cancel-in-progress: true
+
 jobs:
   publish:
     strategy:
