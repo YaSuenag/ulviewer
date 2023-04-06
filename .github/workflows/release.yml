@@ -2,7 +2,7 @@ name: Upload assets
 
 on:
   release:
-    type: [ created ]
+    type: [ published ]
 
 jobs:
   publish:
@@ -30,15 +30,13 @@ jobs:
 
       - name: 'Setup environment variables for release'
         run: |
-          TAG=$(echo ${{ github.ref }} | cut -d '/' -f 3)
           ASSET=$(find target/ -name 'ulviewer*.zip')
-          echo "TAG=$TAG" >> $GITHUB_ENV
           echo "ASSET=$ASSET" >> $GITHUB_ENV
         shell: bash
 
       - name: 'Upload Release Asset'
         uses: AButler/upload-release-assets@v2.0
         with:
-          release-tag: ${{ env.TAG }}
+          release-tag: ${{ github.ref_name }}
           files: ${{ env.ASSET }}
           repo-token: ${{ github.token }}
