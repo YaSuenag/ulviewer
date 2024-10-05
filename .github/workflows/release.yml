@@ -47,7 +47,7 @@ jobs:
           docker run -i --rm -v .:/workspace:Z --platform=linux/arm64 3.9-eclipse-temurin-21 bash -c 'cd /workspace && mvn -B -DskipTests package'
 
       - name: 'Upload Release Asset'
-        uses: AButler/upload-release-assets@v2.0
+        uses: AButler/upload-release-assets@v3.0
         with:
           release-tag: ${{ github.ref_name }}
           files: "target/ulviewer-*.zip"
