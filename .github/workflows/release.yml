@@ -44,7 +44,7 @@ jobs:
         name: Build for Linux AArch64
         run: |
           rm -fR target/perfreader-*/
-          docker run -i --rm -v .:/workspace:Z arm64v8/maven:3.9-eclipse-temurin-21 bash -c 'cd /workspace && mvn -B -DskipTests package'
+          docker run -i --rm -v .:/workspace:Z --platform=linux/arm64 3.9-eclipse-temurin-21 bash -c 'cd /workspace && mvn -B -DskipTests package'
 
       - name: 'Upload Release Asset'
         uses: AButler/upload-release-assets@v2.0
