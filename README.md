@@ -81,6 +81,10 @@ In addition, you have to add `tags` (`tg`) to log tags.
 * You need to open `debug` level log (`compilation+codecache=debug`).
 * You can check CodeCache usage. This chart stacks CodeCache usage by segments (non-profiled nmethods, profiled nmethods, non-nmethods).
 
+> [!NOTE]
+> UL Viewer would use the value of free memory in `compilation+codecache=debug` - it might be different from actual free size.
+> Both CodeCache Sweeper (~ JDK 19) and GC (for CodeCache: JDK 20~) use free list like CMS GC to manage reclaimed CodeBlob (for nmethod), it does not affect free memory in CodeCache. Free memory in `compilation+codecache=debug` shows unallocated memory only.
+
 #### Class histogram
 
 * [Chart] -> [Memory] -> [Class histogram]
