@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2019, 2021, Yasumasa Suenaga
+ * Copyright (C) 2019, 2025, Yasumasa Suenaga
  *
  * This file is part of UL Viewer.
  *
@@ -27,4 +27,5 @@ module ulviewer {
     opens com.yasuenag.ulviewer.ui.chart to javafx.fxml;
     opens com.yasuenag.ulviewer.ui.table to javafx.fxml;
     opens com.yasuenag.ulviewer.classhisto to javafx.base;
+    opens com.yasuenag.ulviewer.classload to javafx.base;
 }
