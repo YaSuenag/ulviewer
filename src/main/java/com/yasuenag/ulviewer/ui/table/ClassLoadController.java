@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016, 2021, Yasumasa Suenaga
+ * Copyright (C) 2016, 2025, Yasumasa Suenaga
  *
  * This file is part of UL Viewer.
  *
@@ -26,8 +26,10 @@ import com.yasuenag.ulviewer.classload.ClassLoad;
 import com.yasuenag.ulviewer.logdata.LogData;
 
 import java.net.URL;
+import java.util.Arrays;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.stream.Collectors;
 
 public class ClassLoadController implements Initializable{
 
@@ -41,7 +43,7 @@ public class ClassLoadController implements Initializable{
     private TableColumn<ClassLoad.ClassLoadLogEntry, String> nameColumn;
 
     @FXML
-    private TableColumn<ClassLoad.ClassLoadLogEntry, LogData> loadColumn;
+    private TableColumn<ClassLoad.ClassLoadLogEntry, LogData[]> loadColumn;
 
     @FXML
     private TableColumn<ClassLoad.ClassLoadLogEntry, LogData> unloadColumn;
@@ -64,6 +66,27 @@ public class ClassLoadController implements Initializable{
         }
     }
 
+    private static class LogArrayLabelCellFactory extends TableCell<ClassLoad.ClassLoadLogEntry, LogData[]>{
+        @Override
+        protected void updateItem(LogData[] item, boolean empty) {
+            super.updateItem(item, empty);
+
+            if(empty || (item == null)){
+                setText("N/A");
+                setGraphic(null);
+            }
+            else{
+                String message = Arrays.stream(item)
+                                       .map(LogData::getMessage)
+                                       .collect(Collectors.joining("\n"));
+                Hyperlink link = new Hyperlink("yes");
+                link.setOnAction(e -> (new Alert(Alert.AlertType.NONE, message, ButtonType.CLOSE)).show());
+                setGraphic(link);
+                setText(null);
+            }
+        }
+    }
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         klassColumn.setCellValueFactory(new PropertyValueFactory<>("klassPtr"));
@@ -79,7 +102,7 @@ public class ClassLoadController implements Initializable{
             }
         });
 
-        loadColumn.setCellFactory(p -> new LogLabelCellFactory());
+        loadColumn.setCellFactory(p -> new LogArrayLabelCellFactory());
         unloadColumn.setCellFactory(p -> new LogLabelCellFactory());
     }
 
